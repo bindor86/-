@@ -38,42 +38,47 @@ button { font-family: inherit; color: inherit; }
 #title .pic svg { width: 100%; height: 100%; filter: drop-shadow(0 0 30px rgba(190,170,255,.5)); }
 
 /* ---------- 새로 시작 ---------- */
-#setup .panel { position: absolute; left: 70px; top: 50px; width: 720px; height: 620px; background: var(--paper); border: 4px solid var(--line); border-radius: 26px; padding: 30px 40px; }
-#setup h2 { margin: 0 0 16px; font-size: 40px; }
-#setup .lbl { font-size: 26px; margin: 18px 0 10px; }
-#nameInput { font-family: inherit; font-size: 34px; padding: 10px 18px; width: 340px; border: 3px solid #c99a6b; border-radius: 14px; background: #fff; color: var(--ink); outline: none; }
+#setup .panel { position: absolute; left: 60px; top: 40px; width: 740px; height: 640px; background: var(--paper); border: 4px solid var(--line); border-radius: 26px; padding: 24px 36px; }
+#setup h2 { margin: 0 0 6px; font-size: 38px; }
+#setup .lbl { font-size: 23px; margin: 12px 0 8px; }
+#nameInput { font-family: inherit; font-size: 30px; padding: 6px 16px; width: 340px; border: 3px solid #c99a6b; border-radius: 14px; background: #fff; color: var(--ink); outline: none; }
 #nameInput:focus { border-color: var(--accent); }
 .chips { display: flex; flex-wrap: wrap; gap: 10px; }
-.chip { font-size: 22px; padding: 6px 16px; border-radius: 999px; border: 2px solid #d8c09c; background: #fff; cursor: pointer; }
+.chip { font-size: 21px; padding: 4px 13px; border-radius: 999px; border: 2px solid #d8c09c; background: #fff; cursor: pointer; }
 .chip:hover { background: #fff1e0; }
-.swatch { width: 62px; height: 62px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 0 0 3px #d8c09c; cursor: pointer; }
+.swatch { width: 52px; height: 52px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 0 0 3px #d8c09c; cursor: pointer; }
 .swatch.on { box-shadow: 0 0 0 5px var(--accent); }
 #setup .preview { position: absolute; right: 80px; top: 60px; width: 380px; height: 560px; border-radius: 26px; overflow: hidden; border: 4px solid var(--line); background: #fdf1dc; }
 #setup .preview > div { position: absolute; inset: 0; }
 #setup .preview svg { width: 100%; height: 100%; }
-#setup .bonus { font-size: 21px; color: var(--accent2); margin-top: 14px; min-height: 28px; }
-#setup .go { position: absolute; left: 40px; bottom: 30px; display: flex; gap: 14px; }
+#setup .bonus { font-size: 20px; color: var(--accent2); margin-top: 10px; min-height: 26px; }
+.chip.on { background: var(--accent); color: #fff; border-color: #c24a72; }
+#setup .go { position: absolute; left: 36px; bottom: 22px; display: flex; gap: 14px; }
 
 /* ---------- 메인 ---------- */
 #hud { position: absolute; left: 0; top: 0; right: 0; height: 66px; display: flex; align-items: center; gap: 16px; padding: 0 18px; color: #fff; }
-#hud .date { font-size: 32px; text-shadow: 0 2px 0 rgba(0,0,0,.3); min-width: 330px; }
-#hud .gold { font-size: 30px; background: rgba(255,255,255,.12); padding: 4px 18px; border-radius: 999px; min-width: 190px; text-align: center; }
+#hud .date { font-size: 29px; text-shadow: 0 2px 0 rgba(0,0,0,.3); min-width: 280px; }
+#hud .gold { font-size: 27px; background: rgba(255,255,255,.12); padding: 4px 16px; border-radius: 999px; min-width: 170px; text-align: center; }
 #hud .sp { flex: 1; }
-#hud .btn { font-size: 21px; padding: 6px 14px; }
+#hud { gap: 10px; }
+#hud .btn { font-size: 20px; padding: 6px 12px; position: relative; }
+#hud .btn.dot::after { content: ''; position: absolute; right: -3px; top: -3px; width: 14px; height: 14px; border-radius: 50%; background: #ff5a7a; border: 2px solid #fff; }
 
 .card { position: absolute; background: var(--paper); border: 4px solid var(--line); border-radius: 22px; }
 #pcard { left: 14px; top: 76px; width: 384px; height: 630px; overflow: hidden; padding: 0; }
-#pcard .room, #pcard .girl { position: absolute; left: 0; top: 0; width: 376px; height: 446px; }
+#pcard .room, #pcard .girl { position: absolute; left: 0; top: 0; width: 376px; height: 420px; }
 #pcard .room svg, #pcard .girl svg { width: 100%; height: 100%; }
 #pcard .girl { transition: transform .3s; }
 #pcard .girl.bounce { animation: bounce .5s; }
 @keyframes bounce { 0%,100% { transform: translateY(0) } 40% { transform: translateY(-14px) } }
 #bubble { position: absolute; left: 14px; top: 12px; max-width: 250px; background: #fff; border: 3px solid #d8c09c; border-radius: 18px; padding: 8px 14px; font-size: 20px; line-height: 1.35; box-shadow: 0 3px 0 rgba(0,0,0,.08); }
 #bubble:empty { display: none; }
-#pinfo { position: absolute; left: 0; right: 0; top: 446px; bottom: 0; padding: 8px 18px; background: var(--paper); border-top: 3px solid var(--line); }
+#pinfo { position: absolute; left: 0; right: 0; top: 420px; bottom: 0; padding: 6px 18px; background: var(--paper); border-top: 3px solid var(--line); }
 #pinfo .nm { font-size: 30px; }
 #pinfo .ttl { font-size: 18px; color: var(--accent2); margin-left: 8px; }
-.meter { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 21px; }
+.meter { display: flex; align-items: center; gap: 10px; margin-top: 6px; font-size: 21px; }
+.meter.aff b { width: auto; }
+.hearts { color: #e8507a; font-size: 24px; letter-spacing: 2px; }
 .meter b { width: 82px; font-weight: normal; }
 .meter .bar { flex: 1; height: 20px; background: #eadcc6; border-radius: 10px; overflow: hidden; }
 .meter .bar i { display: block; height: 100%; border-radius: 10px; transition: width .5s; }
@@ -124,15 +129,47 @@ button { font-family: inherit; color: inherit; }
 #run .head .steps i { width: 22px; height: 22px; border-radius: 50%; background: #e2d2b8; display: block; }
 #run .head .steps i.on { background: var(--accent); }
 #run .head .steps i.done { background: var(--good); }
-#run .scene { position: absolute; left: 0; right: 0; top: 70px; height: 300px; display: flex; align-items: center; justify-content: center; }
-#run .big { font-size: 150px; animation: work 0.9s infinite ease-in-out; }
-@keyframes work { 0%,100% { transform: rotate(-8deg) translateY(0) } 50% { transform: rotate(8deg) translateY(-12px) } }
-#run .days { position: absolute; left: 0; right: 0; top: 370px; display: flex; justify-content: center; gap: 10px; }
+#run .scene { position: absolute; left: 0; right: 0; top: 70px; height: 300px; overflow: hidden; border-bottom: 3px solid var(--line); }
+#run .scene > svg { width: 100%; height: 100%; display: block; }
+.nbub { position: absolute; right: 200px; top: 96px; max-width: 360px; background: #fff; border: 3px solid #d8c09c; border-radius: 16px; padding: 8px 14px; font-size: 20px; line-height: 1.35; opacity: 0; transform: translateY(8px); transition: all .3s; pointer-events: none; }
+.nbub.on { opacity: 1; transform: none; }
+.nbub b { color: var(--accent2); margin-right: 4px; }
+/* 장면 움직임 */
+.pose-swing { animation: pSwing 0.8s infinite ease-in-out; }
+.pose-bob { animation: pBob 0.9s infinite ease-in-out; }
+.pose-nod { animation: pNod 1.6s infinite ease-in-out; }
+.pose-sway { animation: pSway 1.8s infinite ease-in-out; }
+.pose-walk { animation: pWalk 0.7s infinite ease-in-out; }
+.pose-breathe { animation: pBreathe 2.4s infinite ease-in-out; }
+@keyframes pSwing { 0%,100% { transform: rotate(-5deg) } 50% { transform: rotate(5deg) translateY(-6px) } }
+@keyframes pBob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }
+@keyframes pNod { 0%,100% { transform: rotate(0) } 50% { transform: rotate(2deg) translateY(3px) } }
+@keyframes pSway { 0%,100% { transform: rotate(-3deg) } 50% { transform: rotate(3deg) } }
+@keyframes pWalk { 0%,100% { transform: translateY(0) rotate(-2deg) } 50% { transform: translateY(-8px) rotate(2deg) } }
+@keyframes pBreathe { 0%,100% { transform: scaleY(1) } 50% { transform: scaleY(1.02) } }
+.npc-in { animation: npcIn .5s; }
+@keyframes npcIn { from { opacity: 0; transform: translateX(30px) } to { opacity: 1; transform: none } }
+svg .float { animation: fl 1.8s infinite ease-in-out; }
+@keyframes fl { 0% { transform: translateY(0); opacity: 0 } 30% { opacity: 1 } 100% { transform: translateY(-50px); opacity: 0 } }
+svg .glow { animation: glow 1.6s infinite ease-in-out; }
+@keyframes glow { 0%,100% { opacity: .55 } 50% { opacity: 1 } }
+svg .tw { animation: twinkle 3s infinite ease-in-out; }
+svg .ember { animation: ember 3s infinite linear; }
+@keyframes ember { 0% { transform: translateY(0); opacity: 1 } 100% { transform: translateY(-120px); opacity: 0 } }
+svg .drift { animation: drift 8s infinite ease-in-out; }
+@keyframes drift { 0%,100% { transform: translateX(0) } 50% { transform: translateX(40px) } }
+svg .clash { animation: clash .6s infinite; transform-origin: 425px 130px; }
+@keyframes clash { 0%,100% { transform: scale(.8); opacity: .6 } 50% { transform: scale(1.2); opacity: 1 } }
+svg .card { animation: cardUp 1.2s infinite alternate; }
+@keyframes cardUp { from { transform: translateY(10px) } to { transform: translateY(0) } }
+svg .firework { animation: fw 1.4s infinite ease-out; }
+@keyframes fw { 0% { transform: scale(.1); opacity: 1 } 80% { opacity: 1 } 100% { transform: scale(1.4); opacity: 0 } }
+#run .days { position: absolute; left: 0; right: 0; top: 384px; display: flex; justify-content: center; gap: 10px; }
 #run .days i { width: 30px; height: 30px; border-radius: 8px; background: #eadcc6; display: block; transition: background .15s, transform .15s; }
 #run .days i.on { background: #f5b13d; transform: scale(1.1); }
-#run .line { position: absolute; left: 0; right: 0; top: 418px; text-align: center; font-size: 28px; min-height: 40px; }
-#run .result { position: absolute; left: 0; right: 0; top: 466px; text-align: center; }
-#run .result .kind { font-size: 44px; display: inline-block; }
+#run .line { position: absolute; left: 0; right: 0; top: 426px; text-align: center; font-size: 28px; min-height: 40px; }
+#run .result { position: absolute; left: 0; right: 0; top: 470px; text-align: center; }
+#run .result .kind { font-size: 40px; display: inline-block; }
 #run .result .kind.great { color: #e0702e; animation: pop .4s; }
 #run .result .kind.ok { color: var(--good); animation: pop .4s; }
 #run .result .kind.fail { color: var(--bad); animation: pop .4s; }
@@ -165,13 +202,13 @@ button { font-family: inherit; color: inherit; }
 .gift small { display: block; color: var(--ink2); font-size: 18px; margin-top: 4px; }
 
 /* 옷가게 */
-.shop { display: grid; grid-template-columns: repeat(4, 220px); gap: 12px; }
-.ocard { border: 3px solid #e2d2b8; border-radius: 18px; background: #fff; cursor: pointer; position: relative; overflow: hidden; height: 232px; }
+.shop { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; width: 1100px; }
+.ocard { border: 3px solid #e2d2b8; border-radius: 16px; background: #fff; cursor: pointer; position: relative; overflow: hidden; height: 232px; }
 .ocard:hover { border-color: #f0a0bc; }
 .ocard.sel { border-color: var(--accent); box-shadow: 0 0 0 3px #ffd2e0; }
-.ocard .pv { height: 152px; background: #fdf1dc; }
+.ocard .pv { height: 160px; background: #fdf1dc; }
 .ocard .pv svg { width: 100%; height: 100%; }
-.ocard .nm { font-size: 21px; text-align: center; margin-top: 4px; }
+.ocard .nm { font-size: 18px; white-space: nowrap; text-align: center; margin-top: 4px; }
 .ocard .pr { font-size: 19px; text-align: center; color: var(--gold); }
 .ocard .tag { position: absolute; left: 8px; top: 8px; font-size: 16px; background: var(--good); color: #fff; padding: 2px 10px; border-radius: 999px; }
 .ocard .tag.wear { background: var(--accent); }
@@ -179,10 +216,10 @@ button { font-family: inherit; color: inherit; }
 .shopinfo .d { flex: 1; }
 
 /* 도감 */
-.codex { display: grid; grid-template-columns: repeat(5, 208px); gap: 8px; }
-.ecard { border: 3px solid #e2d2b8; border-radius: 14px; background: #fff; padding: 6px 10px; height: 82px; display: flex; align-items: center; gap: 8px; cursor: default; position: relative; }
-.ecard .ic { font-size: 34px; }
-.ecard .nm { font-size: 20px; line-height: 1.15; }
+.codex { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; width: 1100px; }
+.ecard { border: 3px solid #e2d2b8; border-radius: 14px; background: #fff; padding: 4px 8px; height: 84px; display: flex; align-items: center; gap: 8px; cursor: default; position: relative; }
+.ecard .ic { font-size: 30px; }
+.ecard .nm { font-size: 18px; line-height: 1.15; }
 .ecard.lock { background: #f1ebe2; }
 .ecard.lock .ic { filter: grayscale(1) opacity(.45); }
 .ecard.got { border-color: #f0a0bc; background: #fff6f9; }
@@ -220,15 +257,72 @@ button { font-family: inherit; color: inherit; }
 #ending .bgc { position: absolute; inset: 0; transition: background 1s; }
 #ending .pic { position: absolute; left: 70px; top: 40px; width: 430px; height: 640px; opacity: 0; transition: opacity 1.2s; }
 #ending .pic svg { width: 100%; height: 100%; filter: drop-shadow(0 0 28px rgba(255,240,200,.45)); }
-#ending .txt { position: absolute; left: 540px; top: 60px; width: 680px; color: #fff; opacity: 0; transition: opacity 1.2s; }
+#ending .txt { position: absolute; left: 530px; top: 34px; width: 720px; color: #fff; opacity: 0; transition: opacity 1.2s; }
 #ending .txt .no { font-size: 24px; color: #ffe2a8; }
-#ending .txt h2 { margin: 6px 0 18px; font-size: 64px; text-shadow: 0 4px 0 rgba(0,0,0,.25); }
-#ending .txt p { font-size: 27px; line-height: 1.6; }
+#ending .txt h2 { margin: 4px 0 10px; font-size: 56px; text-shadow: 0 4px 0 rgba(0,0,0,.25); }
+#ending .txt p { font-size: 25px; line-height: 1.55; margin: 8px 0; }
 #ending .txt .new { display: inline-block; background: #ffcf4a; color: #5a3a00; font-size: 22px; padding: 2px 14px; border-radius: 999px; margin-left: 12px; vertical-align: middle; }
-#ending .final { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px 14px; font-size: 20px; margin-top: 14px; background: rgba(255,255,255,.12); padding: 12px 16px; border-radius: 16px; }
+#ending .final { white-space: nowrap; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px 14px; font-size: 19px; margin-top: 10px; background: rgba(255,255,255,.12); padding: 12px 16px; border-radius: 16px; }
 #ending .btn:not(.pri) { color: var(--ink); }
-#ending .btns { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+#ending .btns { display: flex; gap: 10px; margin-top: 14px; }
+#ending .btns .btn { font-size: 21px; padding: 8px 14px; }
 #ending .intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 40px; text-align: center; line-height: 1.7; transition: opacity 1s; }
 
-#toast { position: absolute; left: 50%; top: 84px; transform: translateX(-50%); background: rgba(40,30,70,.92); color: #fff; font-size: 24px; padding: 10px 26px; border-radius: 999px; z-index: 80; opacity: 0; transition: opacity .3s; pointer-events: none; }
+#toast { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); background: rgba(40,30,70,.92); color: #fff; font-size: 24px; padding: 10px 26px; border-radius: 999px; z-index: 80; opacity: 0; transition: opacity .3s; pointer-events: none; }
 #toast.on { opacity: 1; }
+
+/* 대화창 */
+.modal.dlgm { width: 900px; padding: 18px 26px; }
+.dlg .dhead { font-size: 30px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.dlg .dhead .ic { font-size: 40px; }
+.dbody { display: flex; gap: 20px; align-items: flex-start; min-height: 170px; background: #fffdf8; border: 3px solid #eadcc6; border-radius: 18px; padding: 14px 18px; }
+.dbody.narr { background: #f6efff; border-color: #ddd0f5; }
+.dpic { width: 150px; height: 150px; flex: none; border-radius: 16px; overflow: hidden; background: linear-gradient(#e8f0ff, #fdf1dc); border: 3px solid #e2d2b8; }
+.dpic.me { background: linear-gradient(#ffe8f0, #fdf1dc); }
+.dpic svg { width: 100%; height: 100%; }
+.dadic { font-size: 84px; text-align: center; line-height: 150px; }
+.dtext { flex: 1; }
+.dname { font-size: 26px; color: var(--accent2); margin-bottom: 4px; }
+.dname small { font-size: 17px; color: var(--ink2); margin-left: 6px; font-family: 'Gowun Dodum', sans-serif; }
+.dtext p { font-size: 26px; line-height: 1.55; margin: 4px 0; }
+.dbody.narr .dtext p { font-style: italic; color: #4a3f6a; }
+/* 딸과의 시간 */
+.dadacts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 8px; }
+.dadact { border: 3px solid #f2c4d0; background: #fff6f9; border-radius: 16px; padding: 12px 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: inherit; }
+.dadact:hover:not(:disabled) { border-color: var(--accent); }
+.dadact:disabled { filter: grayscale(.8) opacity(.5); cursor: default; }
+.dadact .ic { font-size: 40px; }
+.dadact b { font-size: 22px; font-weight: normal; }
+.dadact small { font-size: 16px; color: var(--ink2); }
+/* 탭 */
+.tabs { display: inline-flex; gap: 6px; margin-left: 16px; }
+.tab { font-family: 'Jua', sans-serif; font-size: 21px; border: 3px solid #d8c09c; background: #fff; border-radius: 12px; padding: 4px 14px; cursor: pointer; }
+.tab.on { background: var(--accent); color: #fff; border-color: #c24a72; }
+.shop.acc { grid-template-columns: repeat(6, 1fr); }
+.shop.acc .ocard { height: 196px; }
+.shop.acc .pv { height: 118px; }
+.act .boost { position: absolute; right: 6px; bottom: 4px; font-size: 11px; background: #ff8aa6; color: #fff; padding: 0 5px; border-radius: 6px; }
+.ecard.hid.lock { background: #e8e2f2; }
+.tgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 540px; overflow: auto; width: 1100px; }
+.tcard { border: 2px solid #e2d2b8; background: #f1ebe2; border-radius: 12px; padding: 6px 10px; }
+.tcard b { font-size: 19px; font-weight: normal; display: block; }
+.tcard small { font-size: 15px; color: var(--ink2); }
+.tcard.got { background: #fff6e0; border-color: #f2c94c; }
+/* 프롤로그 */
+#story { z-index: 30; cursor: pointer; }
+.stbg { position: absolute; inset: 0; }
+.stbg > svg { width: 100%; height: 100%; }
+.stbox { position: absolute; left: 60px; right: 60px; bottom: 36px; min-height: 200px; background: rgba(255,249,239,.96); border: 5px solid var(--line); border-radius: 26px; display: flex; gap: 22px; padding: 20px 26px; align-items: flex-start; }
+.stbox.narr { background: rgba(30,24,60,.85); border-color: #6a5aa8; color: #fff; }
+.stbox.narr .sttext p { color: #f0eaff; }
+.stpic { width: 160px; height: 160px; flex: none; border-radius: 18px; overflow: hidden; background: linear-gradient(#e8f0ff, #fdf1dc); border: 3px solid #e2d2b8; }
+.stpic svg { width: 100%; height: 100%; }
+.sttext { flex: 1; }
+.sttext p { font-size: 30px; line-height: 1.6; margin: 6px 0; }
+.stnext { position: absolute; right: 26px; bottom: 14px; font-size: 18px; opacity: .7; animation: twinkle 1.6s infinite; }
+.stskip { position: absolute; right: 24px; top: 20px; }
+.match .mscene { height: 300px; border-radius: 16px; overflow: hidden; margin-bottom: 6px; }
+.match .mscene > svg { width: 100%; height: 100%; }
+.match .vs { margin: 8px 0; }
+#ending .txt .epi { font-size: 21px; color: #ffe9c8; opacity: 0; transition: opacity 1.4s; border-left: 4px solid rgba(255,233,200,.5); padding-left: 14px; }
+#ending .txt .epi.on { opacity: 1; }

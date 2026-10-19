@@ -9,6 +9,6 @@ OUT=star-daughter.html
   echo '<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">'
   echo '<style>'; cat src/style.css; echo '</style></head><body>'
   cat src/body.html
-  echo '<script>'; cat src/data.js src/logic.js src/art.js src/sound.js src/ui.js; echo '</script></body></html>'
+  echo '<script>'; cat src/data.js src/story.js src/logic.js src/art.js src/scenes.js src/sound.js src/ui.js; echo '</script></body></html>'
 } > $OUT
 echo "built $OUT ($(wc -c < $OUT) bytes)"

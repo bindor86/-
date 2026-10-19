@@ -1,8 +1,8 @@
 // 로직만 돌려 보는 시뮬레이터: node tools/sim.js
 const fs = require('fs');
-const src = ['data.js', 'logic.js'].map(f => fs.readFileSync(__dirname + '/../src/' + f, 'utf8')).join('\n');
+const src = ['data.js', 'story.js', 'logic.js'].map(f => fs.readFileSync(__dirname + '/../src/' + f, 'utf8')).join('\n');
 const ctx = {};
-new Function('ctx', src + '\nctx.Logic = Logic; ctx.ENDINGS = ENDINGS; ctx.ACT = ACT; ctx.ACTS = ACTS; ctx.CONTESTS = CONTESTS; ctx.EVENTS = EVENTS; ctx.BDAY_GIFTS = BDAY_GIFTS;')(ctx);
+new Function('ctx', src + '\nctx.Logic = Logic; ctx.ENDINGS = ENDINGS; ctx.ACT = ACT; ctx.ACTS = ACTS; ctx.CONTESTS = CONTESTS; ctx.EVENTS = EVENTS; ctx.BDAY_GIFTS = BDAY_GIFTS; ctx.TITLES = TITLES; ctx.ENDING = ENDING;')(ctx);
 const { Logic, ACT } = ctx;
 
 // policy: { main: [lesson ids], job: id, contest: id, gift: fx-key, rest at stress }
@@ -23,6 +23,8 @@ function play(pol) {
       s.sched[k] = id; cost += ACT[id].cost || 0;
     }
     for (let k = 0; k < 3; k++) Logic.runSlot(s, s.sched[k]);
+    if (pol.dad) Logic.dadTime(s, pol.dad(s));
+    Logic.checkTitles(s);
     Logic.monthEnd(s);
   }
   return s;

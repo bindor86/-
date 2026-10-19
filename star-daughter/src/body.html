@@ -24,6 +24,8 @@
       <div class="chips" id="nameChips" style="margin-top:12px"></div>
       <div class="lbl">머리 색</div>
       <div class="chips" id="hairChips"></div>
+      <div class="lbl">머리 모양</div>
+      <div class="chips" id="styleChips"></div>
       <div class="bonus" id="ngBonus"></div>
       <div class="go">
         <button class="btn pri jua" id="setupGo" style="font-size:30px">키우기 시작!</button>
@@ -39,6 +41,8 @@
       <div class="date jua" id="hDate"></div>
       <div class="gold jua" id="hGold"></div>
       <div class="sp"></div>
+      <button class="btn jua" id="hDad">💕 딸과 시간</button>
+      <button class="btn jua" id="hRufus">💬 루퍼스</button>
       <button class="btn jua" id="hShop">👗 옷가게</button>
       <button class="btn jua" id="hCodex">📖 도감</button>
       <button class="btn jua" id="hSet">⚙️ 설정</button>
@@ -52,6 +56,7 @@
         <div><span class="nm jua" id="pName"></span><span class="ttl" id="pTitle"></span></div>
         <div class="meter"><b>스트레스</b><div class="bar"><i id="mStress"></i></div><span id="vStress"></span></div>
         <div class="meter"><b>평판</b><div class="bar"><i id="mFame" style="background:#e0a92e"></i></div><span id="vFame"></span></div>
+        <div class="meter aff" id="pAff"></div>
         <div class="meter" style="font-size:18px;color:#6b5d7a" id="pMisc"></div>
       </div>
     </div>
@@ -69,12 +74,23 @@
     </div>
     <div id="run">
       <div class="head jua"><span id="rTitle"></span><div class="steps" id="rSteps"><i></i><i></i><i></i></div></div>
-      <div class="scene"><div class="big" id="rIcon"></div></div>
+      <div class="scene" id="rScene"></div>
+      <div class="nbub" id="rNpc"></div>
       <div class="days" id="rDays"></div>
       <div class="line" id="rLine"></div>
       <div class="result" id="rResult"></div>
       <div class="summary" id="rSummary"></div>
       <div class="skip">클릭하면 빨리 넘어가</div>
+    </div>
+  </section>
+
+  <!-- 프롤로그 -->
+  <section id="story" class="screen">
+    <div class="stbg" id="stBg"></div>
+    <button class="btn small jua stskip" id="stSkip">건너뛰기 ▶▶</button>
+    <div class="stbox" id="stBox">
+      <div class="stpic" id="stPic"></div>
+      <div class="sttext"><div class="dname jua" id="stName"></div><p id="stText"></p><div class="stnext">클릭 ▶</div></div>
     </div>
   </section>
 
