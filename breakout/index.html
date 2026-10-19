@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>벽돌깨기</title>
+<style>
+  :root { --bg: #0f1220; --fg: #e8ecf8; --muted: #8a93b2; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg);
+    font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; }
+  h1 { margin: 0 0 8px; font-size: 22px; letter-spacing: 1px; }
+  #wrap { width: 100%; max-width: 640px; }
+  canvas { display: block; width: 100%; height: auto; background: #161a2e; border-radius: 10px;
+    touch-action: none; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+  p { color: var(--muted); font-size: 13px; text-align: center; margin: 10px 0 0; }
+</style>
+</head>
+<body>
+<h1>벽돌깨기</h1>
+<div id="wrap"><canvas id="game" width="640" height="480"></canvas></div>
+<p>← → 또는 마우스/터치로 이동 · 스페이스/클릭으로 시작 · P 일시정지</p>
+<script>
+(() => {
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const COLS = 10, ROWS = 6, BRICK_H = 20, BRICK_GAP = 6, TOP = 60, SIDE = 20;
+  const BRICK_W = (W - SIDE * 2 - BRICK_GAP * (COLS - 1)) / COLS;
+  const COLORS = ['#ff5d73', '#ff9f43', '#feca57', '#1dd1a1', '#48dbfb', '#a29bfe'];
+
+  const paddle = { w: 100, h: 12, x: W / 2 - 50, y: H - 36, speed: 8 };
+  const ball = { r: 7, x: 0, y: 0, vx: 0, vy: 0 };
+  let bricks = [], score = 0, lives = 3, level = 1;
+  let state = 'ready'; // ready | playing | paused | over | win
+  const keys = {};
+
+  function buildBricks() {
+    bricks = [];
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        bricks.push({
+          x: SIDE + c * (BRICK_W + BRICK_GAP),
+          y: TOP + r * (BRICK_H + BRICK_GAP),
+          hp: r < level - 1 ? 2 : 1,
+          color: COLORS[r % COLORS.length],
+          points: (ROWS - r) * 10,
+        });
+      }
+    }
+  }
+
+  function resetBall() {
+    ball.x = paddle.x + paddle.w / 2;
+    ball.y = paddle.y - ball.r - 1;
+    ball.vx = 0; ball.vy = 0;
+  }
+
+  function launch() {
+    const speed = 5 + (level - 1) * 0.6;
+    const angle = (Math.random() * 0.5 + 0.25) * Math.PI; // 45°~135°
+    ball.vx = Math.cos(angle) * speed;
+    ball.vy = -Math.abs(Math.sin(angle) * speed);
+    state = 'playing';
+  }
+
+  function newGame() {
+    score = 0; lives = 3; level = 1;
+    buildBricks(); resetBall(); state = 'ready';
+  }
+
+  function update() {
+    if (keys.ArrowLeft) paddle.x -= paddle.speed;
+    if (keys.ArrowRight) paddle.x += paddle.speed;
+    paddle.x = Math.max(0, Math.min(W - paddle.w, paddle.x));
+
+    if (state === 'ready') { resetBall(); return; }
+    if (state !== 'playing') return;
+
+    // Substeps keep the fast ball from tunneling through bricks.
+    const steps = Math.ceil(Math.hypot(ball.vx, ball.vy) / ball.r);
+    for (let i = 0; i < steps; i++) {
+      ball.x += ball.vx / steps;
+      ball.y += ball.vy / steps;
+      if (collide()) break;
+    }
+  }
+
+  function collide() {
+    if (ball.x - ball.r < 0) { ball.x = ball.r; ball.vx = Math.abs(ball.vx); }
+    if (ball.x + ball.r > W) { ball.x = W - ball.r; ball.vx = -Math.abs(ball.vx); }
+    if (ball.y - ball.r < 0) { ball.y = ball.r; ball.vy = Math.abs(ball.vy); }
+
+    if (ball.y - ball.r > H) {
+      lives--;
+      if (lives <= 0) state = 'over';
+      else { state = 'ready'; resetBall(); }
+      return true;
+    }
+
+    // Paddle: bounce angle depends on where the ball hits.
+    if (ball.vy > 0 &&
+        ball.y + ball.r >= paddle.y && ball.y + ball.r <= paddle.y + paddle.h + ball.vy &&
+        ball.x >= paddle.x - ball.r && ball.x <= paddle.x + paddle.w + ball.r) {
+      const hit = (ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
+      const speed = Math.hypot(ball.vx, ball.vy);
+      const angle = hit * (Math.PI / 3);
+      ball.vx = Math.sin(angle) * speed;
+      ball.vy = -Math.cos(angle) * speed;
+      ball.y = paddle.y - ball.r;
+      return true;
+    }
+
+    for (const b of bricks) {
+      if (b.hp <= 0) continue;
+      const cx = Math.max(b.x, Math.min(ball.x, b.x + BRICK_W));
+      const cy = Math.max(b.y, Math.min(ball.y, b.y + BRICK_H));
+      const dx = ball.x - cx, dy = ball.y - cy;
+      if (dx * dx + dy * dy > ball.r * ball.r) continue;
+
+      if (Math.abs(dx) > Math.abs(dy)) ball.vx = dx > 0 ? Math.abs(ball.vx) : -Math.abs(ball.vx);
+      else ball.vy = dy > 0 ? Math.abs(ball.vy) : -Math.abs(ball.vy);
+
+      b.hp--;
+      if (b.hp <= 0) score += b.points;
+      if (bricks.every(x => x.hp <= 0)) {
+        level++;
+        if (level > 5) state = 'win';
+        else { buildBricks(); state = 'ready'; resetBall(); }
+      }
+      return true;
+    }
+    return false;
+  }
+
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    for (const b of bricks) {
+      if (b.hp <= 0) continue;
+      ctx.fillStyle = b.color;
+      ctx.globalAlpha = b.hp > 1 ? 1 : 0.85;
+      roundRect(b.x, b.y, BRICK_W, BRICK_H, 4); ctx.fill();
+      if (b.hp > 1) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke(); }
+    }
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = '#e8ecf8';
+    roundRect(paddle.x, paddle.y, paddle.w, paddle.h, 6); ctx.fill();
+
+    ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff'; ctx.fill();
+
+    ctx.fillStyle = '#e8ecf8';
+    ctx.font = '16px system-ui, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText(`점수 ${score}`, 20, 32);
+    ctx.textAlign = 'center'; ctx.fillText(`레벨 ${level}`, W / 2, 32);
+    ctx.textAlign = 'right'; ctx.fillText('♥'.repeat(Math.max(lives, 0)), W - 20, 32);
+
+    const msg = { ready: '스페이스 또는 클릭으로 발사', paused: '일시정지',
+                  over: `게임 오버 · ${score}점 — 클릭하여 다시`, win: `클리어! ${score}점 — 클릭하여 다시` }[state];
+    if (msg) {
+      ctx.fillStyle = 'rgba(15,18,32,.75)';
+      ctx.fillRect(0, H / 2 - 30, W, 60);
+      ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
+      ctx.font = 'bold 20px system-ui, sans-serif';
+      ctx.fillText(msg, W / 2, H / 2 + 7);
+    }
+  }
+
+  function action() {
+    if (state === 'ready') launch();
+    else if (state === 'over' || state === 'win') newGame();
+  }
+
+  function pointerX(e) {
+    const rect = canvas.getBoundingClientRect();
+    return (e.clientX - rect.left) * (W / rect.width);
+  }
+
+  document.addEventListener('keydown', e => {
+    keys[e.key] = true;
+    if (e.code === 'Space') { e.preventDefault(); action(); }
+    if (e.key === 'p' || e.key === 'P') {
+      if (state === 'playing') state = 'paused';
+      else if (state === 'paused') state = 'playing';
+    }
+  });
+  document.addEventListener('keyup', e => { keys[e.key] = false; });
+  canvas.addEventListener('pointermove', e => { paddle.x = pointerX(e) - paddle.w / 2; });
+  canvas.addEventListener('pointerdown', e => { paddle.x = pointerX(e) - paddle.w / 2; action(); });
+
+  function loop() { update(); draw(); requestAnimationFrame(loop); }
+  newGame();
+  loop();
+})();
+</script>
+</body>
+</html>
