@@ -136,7 +136,7 @@ button { font-family: inherit; color: inherit; }
 #run .head .steps i.done { background: var(--good); }
 #run .scene { position: absolute; left: 0; right: 0; top: 70px; height: 300px; overflow: hidden; border-bottom: 3px solid var(--line); }
 #run .scene > svg { width: 100%; height: 100%; display: block; }
-.nbub { position: absolute; right: 200px; top: 96px; max-width: 360px; background: #fff; border: 3px solid #d8c09c; border-radius: 16px; padding: 8px 14px; font-size: 20px; line-height: 1.35; opacity: 0; transform: translateY(8px); transition: all .3s; pointer-events: none; }
+.nbub { position: absolute; right: 16px; top: 80px; max-width: 330px; background: #fff; border: 3px solid #d8c09c; border-radius: 16px; padding: 8px 14px; font-size: 20px; line-height: 1.35; opacity: 0; transform: translateY(8px); transition: all .3s; pointer-events: none; }
 .nbub.on { opacity: 1; transform: none; }
 .nbub b { color: var(--accent2); margin-right: 4px; }
 /* 장면 움직임 */
@@ -221,17 +221,24 @@ svg .firework { animation: fw 1.4s infinite ease-out; }
 .shopinfo .d { flex: 1; }
 
 /* 도감 */
-.codex { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; width: 1100px; }
-.ecard { border: 3px solid #e2d2b8; border-radius: 14px; background: #fff; padding: 4px 8px; height: 84px; display: flex; align-items: center; gap: 8px; cursor: default; position: relative; }
+.codex { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; width: 1100px; }
+.ecard { border: 3px solid #e2d2b8; border-radius: 14px; background: #fff; padding: 4px 8px; height: 70px; display: flex; align-items: center; gap: 8px; cursor: default; position: relative; }
 .ecard .ic { font-size: 30px; }
-.ecard .nm { font-size: 18px; line-height: 1.15; }
+.ecard .nm { font-size: 18px; line-height: 1.15; word-break: keep-all; }
 .ecard.lock { background: #f1ebe2; }
 .ecard.lock .ic { filter: grayscale(1) opacity(.45); }
 .ecard.got { border-color: #f0a0bc; background: #fff6f9; }
 .ecard .pg { position: absolute; left: 10px; right: 10px; bottom: 5px; height: 6px; background: #eadcc6; border-radius: 3px; overflow: hidden; }
 .ecard .pg i { display: block; height: 100%; background: var(--accent2); }
 .ecard:hover { border-color: var(--accent2); }
-.cinfo { margin-top: 12px; font-size: 22px; min-height: 66px; background: #fff; border-radius: 14px; padding: 10px 16px; border: 2px dashed #e2d2b8; }
+.rqs { font-size: 19px; margin-top: 4px; color: var(--ink2); }
+.cpic { float: left; width: 74px; height: 104px; margin: -6px 12px 0 -6px; }
+.cpic svg { width: 100%; height: 100%; }
+#ending .missed { font-size: 19px; color: #ffe2a8; margin-top: 6px; }
+.rq.ok { color: var(--good); }
+.rq.no { color: var(--bad); }
+.rq small { font-size: 15px; color: var(--ink2); }
+.cinfo { margin-top: 10px; font-size: 21px; min-height: 96px; background: #fff; border-radius: 14px; padding: 10px 16px; border: 2px dashed #e2d2b8; }
 
 /* 설정 */
 .setrow { display: flex; align-items: center; gap: 12px; font-size: 25px; margin: 12px 0; }
@@ -497,21 +504,30 @@ const OUTFITS = [
   { id: 'basic', name: '무명 원피스', price: 0,    col: '#8fb3d9', acc: '#ffffff', style: 'dress', desc: '루퍼스 아저씨가 고쳐 준 첫 옷.' },
   { id: 'sky',   name: '하늘색 드레스', price: 300,  col: '#79c3ee', acc: '#ffffff', style: 'dress', bonus: { cha: 1 }, desc: '매달 매력 +1' },
   { id: 'check', name: '체크 원피스', price: 320,  col: '#c96a4a', acc: '#f6e2b0', style: 'dress', pattern: 'check', bonus: { int: 1 }, desc: '매달 지능 +1' },
-  { id: 'apron', name: '앞치마 차림', price: 220,  col: '#e79a9a', acc: '#ffffff', style: 'apron', act: { bakery: 1.2 }, contest: { cook: 20 }, desc: '빵집 효과 +20%, 요리 대회 +20' },
-  { id: 'train', name: '수련복',     price: 260,  col: '#c9a36b', acc: '#6b4f2e', style: 'train', act: { sword: 1.2 }, contest: { martial: 20 }, desc: '검술 효과 +20%, 무술 대회 +20' },
-  { id: 'hunt',  name: '사냥복',     price: 300,  col: '#5f8a4a', acc: '#4a3a22', style: 'train', act: { hunter: 1.2, farm: 1.2 }, desc: '사냥·농장 효과 +20%' },
-  { id: 'choir', name: '성가대복',   price: 260,  col: '#f4f1e8', acc: '#4a6fb5', style: 'robe', act: { church: 1.2 }, bonus: { mor: 1 }, desc: '성당 효과 +20%, 매달 도덕 +1' },
-  { id: 'sailor', name: '세일러복',  price: 350,  col: '#f7f7fb', acc: '#2d4a8a', style: 'sailor', act: { study: 1.2 }, desc: '학문 효과 +20%' },
-  { id: 'smock', name: '화가 작업복', price: 280, col: '#e8dcc4', acc: '#8a6a4a', style: 'smock', act: { art: 1.2 }, desc: '미술 효과 +20%' },
-  { id: 'dancer', name: '무용복',    price: 380,  col: '#ff9ec0', acc: '#ffffff', style: 'tutu', act: { music: 1.2 }, bonus: { cha: 1 }, desc: '음악 효과 +20%, 매달 매력 +1' },
-  { id: 'maid',  name: '시녀복',     price: 400,  col: '#3a3340', acc: '#ffffff', style: 'maid', act: { manner: 1.2, scribe: 1.2 }, desc: '예절·서기 효과 +20%' },
-  { id: 'robe',  name: '마법사 로브', price: 420,  col: '#4b3a8c', acc: '#e8c547', style: 'robe', act: { magic: 1.2 }, contest: { magic: 20 }, desc: '마법 효과 +20%, 마법 대회 +20' },
+  { id: 'apron', name: '앞치마 차림', price: 220,  col: '#e79a9a', acc: '#ffffff', style: 'apron', act: { bakery: 1.15 }, contest: { cook: 20 }, desc: '빵집 효과 +15%, 요리 대회 +20' },
+  { id: 'train', name: '수련복',     price: 260,  col: '#c9a36b', acc: '#6b4f2e', style: 'train', act: { sword: 1.15 }, contest: { martial: 20 }, desc: '검술 효과 +15%, 무술 대회 +20' },
+  { id: 'hunt',  name: '사냥복',     price: 300,  col: '#5f8a4a', acc: '#4a3a22', style: 'train', act: { hunter: 1.15, farm: 1.15 }, desc: '사냥·농장 효과 +15%' },
+  { id: 'choir', name: '성가대복',   price: 260,  col: '#f4f1e8', acc: '#4a6fb5', style: 'robe', act: { church: 1.15 }, bonus: { mor: 1 }, desc: '성당 효과 +15%, 매달 도덕 +1' },
+  { id: 'sailor', name: '세일러복',  price: 350,  col: '#f7f7fb', acc: '#2d4a8a', style: 'sailor', act: { study: 1.15 }, desc: '학문 효과 +15%' },
+  { id: 'smock', name: '화가 작업복', price: 280, col: '#e8dcc4', acc: '#8a6a4a', style: 'smock', act: { art: 1.15 }, desc: '미술 효과 +15%' },
+  { id: 'dancer', name: '무용복',    price: 380,  col: '#ff9ec0', acc: '#ffffff', style: 'tutu', act: { music: 1.15 }, bonus: { cha: 1 }, desc: '음악 효과 +15%, 매달 매력 +1' },
+  { id: 'maid',  name: '시녀복',     price: 400,  col: '#3a3340', acc: '#ffffff', style: 'maid', act: { manner: 1.15, scribe: 1.15 }, desc: '예절·서기 효과 +15%' },
+  { id: 'robe',  name: '마법사 로브', price: 420,  col: '#4b3a8c', acc: '#e8c547', style: 'robe', act: { magic: 1.15 }, contest: { magic: 20 }, desc: '마법 효과 +15%, 마법 대회 +20' },
   { id: 'coat',  name: '겨울 코트',  price: 450,  col: '#8a4a5a', acc: '#f2c94c', style: 'coat', bonus: { stress: -3, hp: 1 }, desc: '매달 스트레스 -3, 체력 +1' },
   { id: 'silk',  name: '실크 드레스', price: 900,  col: '#d65a8a', acc: '#ffd6e6', style: 'gown', bonus: { ele: 1 }, contest: { beauty: 40 }, desc: '매달 기품 +1, 미인 대회 +40' },
   { id: 'rose',  name: '장미 드레스', price: 1500, col: '#b8304f', acc: '#ffe0ea', style: 'gown', bonus: { cha: 1, ele: 1 }, contest: { beauty: 70 }, desc: '매달 매력·기품 +1, 미인 대회 +70' },
   { id: 'star',  name: '별빛 드레스', price: 2400, col: '#22307a', acc: '#ffe680', style: 'gown', sparkle: '#ffe680', bonus: { cha: 2, ele: 1 }, contest: { beauty: 100 }, desc: '매달 매력 +2·기품 +1, 미인 대회 +100' },
   // 엔딩 그림 전용
-  { id: 'armor', hidden: true, col: '#9fb2c8', acc: '#e8c547', style: 'armor' },
+  { id: 'armor', hidden: true, col: '#9fb2c8', acc: '#e8c547', style: 'armor', cape: '#b53a4a' },
+  { id: 'armorGold', hidden: true, col: '#d8dfe8', acc: '#e8c547', style: 'armor', cape: '#d9a42e' },
+  { id: 'armorBlue', hidden: true, col: '#9fb2c8', acc: '#ffffff', style: 'armor', cape: '#3a5ab5' },
+  { id: 'armorViolet', hidden: true, col: '#b8b2d8', acc: '#e8c547', style: 'armor', cape: '#6a4ab5' },
+  { id: 'starrobe', hidden: true, col: '#1d2557', acc: '#ffe680', style: 'robe', sparkle: '#ffe680' },
+  { id: 'labcoat', hidden: true, col: '#eef2f6', acc: '#4fa3e0', style: 'coat' },
+  { id: 'scholarrobe', hidden: true, col: '#2f4a6b', acc: '#e8c547', style: 'robe' },
+  { id: 'clerk', hidden: true, col: '#5a2f3f', acc: '#e8c547', style: 'robe' },
+  { id: 'merchantcoat', hidden: true, col: '#7a5a2a', acc: '#e8c547', style: 'coat' },
+  { id: 'designer', hidden: true, col: '#9b5ac0', acc: '#ffd6e6', style: 'gown', sparkle: '#ffffff' },
   { id: 'royal', hidden: true, col: '#f3f0ff', acc: '#e8c547', style: 'gown', sparkle: '#e8c547' },
   { id: 'witch', hidden: true, col: '#2d2340', acc: '#8f5cd6', style: 'robe' },
   { id: 'nun',   hidden: true, col: '#30324a', acc: '#ffffff', style: 'robe' },
@@ -523,12 +539,12 @@ const OUTFIT = Object.fromEntries(OUTFITS.map(o => [o.id, o]));
 // 액세서리 (한 개만 착용)
 const ACC_ITEMS = [
   { id: 'flower',   name: '꽃 머리핀',   price: 150, slot: 'head', bonus: { cha: 1 }, desc: '매달 매력 +1' },
-  { id: 'strawhat', name: '밀짚모자',    price: 180, slot: 'head', act: { farm: 1.15 }, desc: '농장 효과 +15%' },
-  { id: 'glasses',  name: '동그란 안경',  price: 200, slot: 'head', act: { study: 1.15, scribe: 1.15 }, desc: '학문·서기 효과 +15%' },
-  { id: 'beret',    name: '빨간 베레모',  price: 220, slot: 'head', act: { art: 1.15 }, desc: '미술 효과 +15%' },
+  { id: 'strawhat', name: '밀짚모자',    price: 180, slot: 'head', act: { farm: 1.1 }, desc: '농장 효과 +10%' },
+  { id: 'glasses',  name: '동그란 안경',  price: 200, slot: 'head', act: { study: 1.1, scribe: 1.1 }, desc: '학문·서기 효과 +10%' },
+  { id: 'beret',    name: '빨간 베레모',  price: 220, slot: 'head', act: { art: 1.1 }, desc: '미술 효과 +10%' },
   { id: 'catears',  name: '고양이 머리띠', price: 300, slot: 'head', bonus: { stress: -2 }, desc: '매달 스트레스 -2' },
-  { id: 'feather',  name: '깃털 모자',   price: 320, slot: 'head', act: { music: 1.15 }, contest: { beauty: 15 }, desc: '음악 효과 +15%, 미인 대회 +15' },
-  { id: 'magehat',  name: '별 마법 모자', price: 380, slot: 'head', act: { magic: 1.15 }, contest: { magic: 25 }, desc: '마법 효과 +15%, 마법 대회 +25' },
+  { id: 'feather',  name: '깃털 모자',   price: 320, slot: 'head', act: { music: 1.1 }, contest: { beauty: 15 }, desc: '음악 효과 +10%, 미인 대회 +15' },
+  { id: 'magehat',  name: '별 마법 모자', price: 380, slot: 'head', act: { magic: 1.1 }, contest: { magic: 25 }, desc: '마법 효과 +10%, 마법 대회 +25' },
   { id: 'bigribbon', name: '큰 리본',    price: 260, slot: 'head', bonus: { cha: 1 }, contest: { beauty: 20 }, desc: '매달 매력 +1, 미인 대회 +20' },
   { id: 'pearl',    name: '진주 목걸이',  price: 600, slot: 'neck', bonus: { ele: 1 }, contest: { beauty: 30 }, desc: '매달 기품 +1, 미인 대회 +30' },
   { id: 'brooch',   name: '별 브로치',   price: 500, slot: 'neck', contest: { martial: 15, cook: 15, magic: 15, beauty: 15 }, desc: '모든 대회 +15' },
@@ -588,7 +604,7 @@ const TITLES = [
   { id: 'l_beauty', name: '왕국 제일의 미녀', desc: '미인 대회 3회 우승', c: s => s.wins.beauty >= 3 },
   { id: 'l_cook', name: '황금 국자', desc: '요리 대회 3회 우승', c: s => s.wins.cook >= 3 },
   { id: 'l_magic', name: '축제의 대마법사', desc: '마법 대회 3회 우승', c: s => s.wins.magic >= 3 },
-  { id: 'allfest', name: '축제의 여왕', desc: '네 대회를 모두 한 번 이상 우승', c: s => s.wins.martial && s.wins.beauty && s.wins.cook && s.wins.magic },
+  { id: 'allfest', name: '축제의 여왕', desc: '서로 다른 대회 세 가지에서 우승', c: s => ['martial', 'beauty', 'cook', 'magic'].filter(k => s.wins[k] > 0).length >= 3 },
   { id: 'm_sword', name: '검의 길', desc: '검술 수업 5단계', c: s => s.cnt.sword >= 56 },
   { id: 'm_study', name: '책벌레', desc: '학문 수업 5단계', c: s => s.cnt.study >= 56 },
   { id: 'm_manner', name: '예절의 화신', desc: '예절 수업 5단계', c: s => s.cnt.manner >= 56 },
@@ -618,142 +634,172 @@ const TITLE = Object.fromEntries(TITLES.map(t => [t.id, t]));
 
 // 엔딩: 위에서부터 먼저 맞는 것 하나.  hidden: 도감에서 조건을 가림
 const ENDINGS = [
-  { id: 'hero', name: '전설의 용사', icon: '🗡️', outfit: 'armor', acc: 'sword', bg: '#3b2f6b',
+  { id: 'hero', tier: 'S', name: '전설의 용사', icon: '🗡️', outfit: 'armorGold', acc: 'sword', bg: '#3b2f6b',
     hint: '검술·마력·체력이 모두 아주 높고, 여행을 많이 다녀야 해.',
-    req: { st: { swd: 450, mag: 300, hp: 400 }, cnt: { travel: 8 } },
+    req: { st: { swd: 400, mag: 260, hp: 350 }, cnt: { travel: 8 } },
     text: '{n}{은} 왕국을 위협하던 검은 용을 쓰러뜨렸어. 사람들은 {n}{을} 전설의 용사라고 불렀고, 그 이름은 노래가 되어 대대로 전해졌어.',
     epi: '개선 행진 날, {n}{은} 왕보다 먼저 아빠를 찾아 달려왔어. "아빠한테 배운 첫 자세, 한 번도 잊은 적 없어."' },
-  { id: 'heir', name: '북부 가문의 계승자', icon: '🏔️', outfit: 'north', acc: 'locket', bg: '#2f4a6b', hidden: true,
-    hint: '은 목걸이의 비밀을 모두 풀고, 기품과 지능을 갖춰야 해.',
-    req: { flags: { locket: 4 }, st: { ele: 250, int: 200 } },
-    text: '목걸이 속 문장은 전쟁으로 무너진 북부 루나리스 가문의 것이었어. 살아 있던 할머니가 {n}{을} 끌어안았고, {n}{은} 폐허가 된 고향을 다시 일으키는 영주가 되었어.',
-    epi: '떠나기 전날 밤, {n}{은} 아빠 손에 목걸이를 쥐여 줬어. "이건 아빠가 갖고 있어. 내 진짜 집은 여기라는 증거니까." 북부 성의 깃발에는 작은 별 하나가 새로 수놓아졌어.' },
-  { id: 'diplomat', name: '왕국의 대사', icon: '🕊️', outfit: 'royal', acc: 'tiara', bg: '#6b2f55',
+  { id: 'diplomat', tier: 'S', name: '왕국의 대사', icon: '🕊️', outfit: 'royal', acc: 'tiara', bg: '#6b2f55',
     hint: '기품·매력이 아주 높고 지능도 높아야 해. 리아나 공주와 깊은 우정을 쌓아야 해.',
-    req: { st: { ele: 380, cha: 330, int: 250 }, flags: { liana: 3 } },
+    req: { st: { ele: 360, cha: 280, int: 220 }, flags: { liana: 3 } },
     text: '리아나 공주의 추천으로 {n}{은} 왕국의 대사가 되었어. 전쟁이 남긴 상처를 누구보다 잘 아는 {n}{은} 이웃 나라들과 평화 조약을 맺어 냈어.',
     epi: '조약 서명식에서 {n}{은} 이렇게 말했어. "저는 전쟁 고아였습니다. 저를 키워 준 건 칼을 내려놓은 한 기사였지요." 회의장이 오래도록 조용했어.' },
-  { id: 'saint', name: '대성당의 성녀', icon: '🕊️', outfit: 'choir', acc: 'halo', bg: '#2f5a6b',
-    hint: '도덕이 아주 높고 마력도 높아야 해. 성당 일을 많이(20번 이상).',
-    req: { st: { mor: 430, mag: 250 }, cnt: { church: 20 } },
+  { id: 'saint', tier: 'S', name: '대성당의 성녀', icon: '🕊️', outfit: 'choir', acc: 'halo', bg: '#2f5a6b',
+    hint: '도덕이 아주 높고 마력도 높아야 해. 성당 일을 많이(30번 이상) 하고 평판도 쌓아야 해.',
+    req: { st: { mor: 460, mag: 260 }, cnt: { church: 30 }, fame: 150 },
     text: '{n}의 손이 닿으면 아픈 사람이 낫는다는 소문이 퍼졌어. 대성당은 {n}{을} 성녀로 맞이했고, 많은 이들이 그 미소에 위로받았어.',
     epi: '베네딕트 신부님은 은퇴하며 말했어. "그 아이가 처음 성당 바닥을 닦던 날을 기억하네. 그때부터 빛이 났지."' },
-  { id: 'knightcap', name: '기사단장', icon: '🛡️', outfit: 'armor', acc: 'sword', bg: '#2f3f6b',
-    hint: '검술·근력이 아주 높고 무술 대회 우승 3회 이상.',
-    req: { st: { swd: 420, str: 320, mor: 120 }, wins: { martial: 3 } },
+  { id: 'knightcap', tier: 'S', name: '기사단장', icon: '🛡️', outfit: 'armor', acc: 'sword', bg: '#2f3f6b',
+    hint: '검술·근력이 아주 높고 무술 대회 우승 3회 이상. 기사답게 도덕도 갖춰야 해.',
+    req: { st: { swd: 420, str: 320, mor: 150 }, wins: { martial: 3 } },
     text: '무술 대회를 휩쓴 {n}{은} 왕국 최초의 여성 기사단장이 되었어. 은빛 갑옷을 입은 {n}{이} 지나가면 기사들이 모두 경례했어.',
     epi: '취임식 날, 볼드 사범님이 아빠 어깨를 툭 쳤어. "자네보다 낫구먼." 아빠는 아무 말 없이 웃기만 했어.' },
-  { id: 'archmage', name: '궁정 마법사', icon: '🔮', outfit: 'robe', acc: 'magehat', bg: '#3b2f7a',
+  { id: 'archmage', tier: 'S', name: '궁정 마법사', icon: '🔮', outfit: 'robe', acc: 'magehat', bg: '#3b2f7a',
     hint: '마력·지능이 아주 높고 마법 대회 우승 2회 이상.',
     req: { st: { mag: 420, int: 320 }, wins: { magic: 2 } },
     text: '{n}{은} 마법탑의 시험을 단숨에 통과하고 궁정 마법사가 되었어. 밤하늘에 쏘아 올린 {n}의 별빛 마법은 축제의 자랑이 되었지.',
     epi: '멜리사 선생님은 마법탑 꼭대기에 {n}의 이름을 새기며 중얼거렸어. "커튼 태우던 꼬마가 말이야…"' },
-  { id: 'chef', name: '왕궁 요리장', icon: '🍽️', outfit: 'apron', acc: 'chefhat', bg: '#7a4a2f',
+  { id: 'chef', tier: 'S', name: '왕궁 요리장', icon: '🍽️', outfit: 'apron', acc: 'chefhat', bg: '#7a4a2f',
     hint: '요리가 아주 높고 요리 대회 우승 2회 이상.',
     req: { st: { cook: 400 }, wins: { cook: 2 } },
     text: '{n}의 요리를 맛본 임금님이 감탄했어. {n}{은} 왕궁 주방을 맡게 되었고, 매일 성 안 가득 맛있는 냄새가 퍼졌어.',
     epi: '왕궁 연회의 마지막 디저트는 언제나 크림빵이었어. 마사 할머니에게 처음 배운 그 맛 그대로.' },
-  { id: 'merchant', name: '대상인', icon: '💰', outfit: 'silk', acc: 'coin', bg: '#6b5a2f',
-    hint: '돈을 8000G 넘게 모으고 지능도 꽤 높아야 해.',
-    req: { gold: 8000, st: { int: 220 } },
-    text: '알뜰하게 모은 돈으로 {n}{은} 작은 가게를 열었어. 가게는 금세 커져서 바다 건너까지 배를 띄우는 큰 상회가 되었어.',
-    epi: '상회의 첫 번째 배 이름은 「아빠의 지갑호」였어. 선원들은 이름을 듣고 한참 웃었대.' },
-  { id: 'scholar', name: '왕립 학자', icon: '🎓', outfit: 'robe', acc: 'glasses', bg: '#2f4a6b',
+  { id: 'scholar', tier: 'A', name: '왕립 학자', icon: '🎓', outfit: 'scholarrobe', acc: 'glasses', bg: '#2f4a6b',
     hint: '지능이 아주 높아야 해. 기품도 조금.',
-    req: { st: { int: 450, ele: 180 } },
+    req: { st: { int: 450, ele: 150 } },
     text: '{n}{은} 왕립 학술원에 최연소로 들어갔어. 별의 움직임을 밝힌 {n}의 논문은 온 대륙의 학자들을 놀라게 했어.',
     epi: '엘마 선생님은 논문 첫 장의 헌사를 읽고 안경을 벗었어. 「글을 가르쳐 준 엘마 선생님과, 밤마다 촛불을 켜 준 아빠에게.」' },
-  { id: 'painter', name: '화가', icon: '🖼️', outfit: 'smock', acc: 'beret', bg: '#2f6b5a',
-    hint: '감성이 아주 높고 미술 수업을 많이(30번 이상).',
-    req: { st: { sen: 400 }, cnt: { art: 30 } },
+  { id: 'courtclerk', tier: 'A', name: '궁정 서기관', icon: '🖋️', outfit: 'clerk', acc: 'glasses', bg: '#4a3f2f',
+    hint: '지능과 기품을 함께 갖추면…',
+    req: { st: { int: 330, ele: 300 } },
+    text: '{n}{은} 왕궁의 서기관이 되었어. 왕의 칙서도, 이웃 나라에 보내는 편지도 {n}의 손을 거쳐야 세상에 나갔어.',
+    epi: '오스왈드 서기장은 은퇴하며 자기 깃펜을 {n}에게 물려줬어. "글씨에 마음이 담긴 사람은 처음 봤네."' },
+  { id: 'painter', tier: 'A', name: '화가', icon: '🖼️', outfit: 'smock', acc: 'beret', bg: '#2f6b5a',
+    hint: '감성이 아주 높고 미술 수업을 많이(40번 이상).',
+    req: { st: { sen: 450 }, cnt: { art: 40 } },
     text: '{n}의 그림이 왕도 미술관에 걸렸어. 별빛을 담은 듯한 색채에 사람들이 줄을 서서 그림을 보러 왔어.',
     epi: '가장 유명한 그림의 제목은 「별이 떨어진 밤의 언덕」. 그림 구석에는 손을 내미는 기사가 작게 그려져 있었어.' },
-  { id: 'musician', name: '궁정 악사', icon: '🎻', outfit: 'silk', acc: 'violin', bg: '#5a2f6b',
-    hint: '감성·매력이 높고 음악 수업을 많이(30번 이상).',
-    req: { st: { sen: 380, cha: 250 }, cnt: { music: 30 } },
+  { id: 'musician', tier: 'A', name: '궁정 악사', icon: '🎻', outfit: 'silk', acc: 'violin', bg: '#5a2f6b',
+    hint: '감성이 아주 높고 매력도 조금. 음악 수업을 아주 많이(40번 이상).',
+    req: { st: { sen: 430, cha: 220 }, cnt: { music: 40 } },
     text: '{n}의 바이올린 연주에 왕궁 연회장이 고요해졌어. {n}{은} 궁정 악사가 되어 매일 밤 아름다운 음악을 들려줬어.',
     epi: '피오 선생님이 만든 곡에 {n}{이} 가사를 붙였어. 「언덕 위의 작은 집」. 왕도 아이들이 다 따라 부르는 노래가 되었어.' },
-  { id: 'wanderer', name: '바람 같은 떠돌이', icon: '🍂', outfit: 'travel', acc: 'none', bg: '#4a3a2f', hidden: true,
+  { id: 'merchant', tier: 'A', name: '대상인', icon: '💰', outfit: 'merchantcoat', acc: 'coin', bg: '#6b5a2f',
+    hint: '돈을 15000G 넘게 모으고 지능도 꽤 높아야 해.',
+    req: { gold: 15000, st: { int: 220 } },
+    text: '알뜰하게 모은 돈으로 {n}{은} 작은 가게를 열었어. 가게는 금세 커져서 바다 건너까지 배를 띄우는 큰 상회가 되었어.',
+    epi: '상회의 첫 번째 배 이름은 「아빠의 지갑호」였어. 선원들은 이름을 듣고 한참 웃었대.' },
+  { id: 'heir', tier: 'S', name: '북부 가문의 계승자', icon: '🏔️', outfit: 'north', acc: 'locket', bg: '#2f4a6b', hidden: true,
+    hint: '은 목걸이의 비밀을 모두 풀고(할머니를 만나러 가야 해), 기품과 지능이 아주 높아야 해.',
+    req: { flags: { locket: 4 }, st: { ele: 320, int: 280 } },
+    text: '목걸이 속 문장은 전쟁으로 무너진 북부 루나리스 가문의 것이었어. 살아 있던 할머니가 {n}{을} 끌어안았고, {n}{은} 폐허가 된 고향을 다시 일으키는 영주가 되었어.',
+    epi: '떠나기 전날 밤, {n}{은} 아빠 손에 목걸이를 쥐여 줬어. "이건 아빠가 갖고 있어. 내 진짜 집은 여기라는 증거니까." 북부 성의 깃발에는 작은 별 하나가 새로 수놓아졌어.' },
+  { id: 'wanderer', tier: 'W', name: '바람 같은 떠돌이', icon: '🍂', outfit: 'travel', acc: 'none', bg: '#4a3a2f', hidden: true,
     hint: '집을 자주 나가 버리면…',
     req: { runaways: 2 },
     text: '{n}{은} 열여덟 살 생일 아침, 짧은 편지를 남기고 길을 떠났어. 어디에도 매이지 않는 바람 같은 삶이었어.',
     epi: '그래도 해마다 가을 축제가 되면, 문 앞에 들꽃 한 다발이 놓여 있었어. 쪽지에는 서툰 글씨로 「미안해, 고마워」.' },
-  { id: 'witch', name: '숲의 마녀', icon: '🧙‍♀️', outfit: 'witch', acc: 'witchhat', bg: '#2a2340',
-    hint: '마력은 높은데 도덕이 낮으면…',
-    req: { st: { mag: 320 }, max: { mor: 150 } },
+  { id: 'witch', tier: 'A', name: '숲의 마녀', icon: '🧙‍♀️', outfit: 'witch', acc: 'witchhat', bg: '#2a2340',
+    hint: '마력은 아주 높은데 도덕이 낮고… 금지된 마법서에 손을 댔다면.',
+    req: { st: { mag: 380 }, max: { mor: 130 }, flags: { forbidden: 1 } },
     text: '{n}{은} 깊은 숲속 오두막에서 혼자 마법을 연구하며 살게 되었어. 사람들은 무서워했지만, 길 잃은 아이에게는 늘 따뜻한 수프를 내주었대.',
     epi: '아빠가 찾아가면 마녀는 투덜대면서도 제일 좋은 찻잔을 꺼냈어. 그 찻잔은 열한 살 생일 선물이었지.' },
-  { id: 'thief', name: '의적 두목', icon: '🗝️', outfit: 'train', acc: 'mask', bg: '#3a2f2f',
-    hint: '근력·검술이 꽤 높은데 도덕이 낮으면…',
-    req: { st: { str: 250, swd: 200 }, max: { mor: 120 } },
+  { id: 'thief', tier: 'A', name: '의적 두목', icon: '🗝️', outfit: 'train', acc: 'mask', bg: '#3a2f2f',
+    hint: '근력·검술이 꽤 높고 도덕이 낮은데… 주점의 수상한 제안을 받아들였다면.',
+    req: { st: { str: 250, swd: 200 }, max: { mor: 100 }, flags: { dark: 1 } },
     text: '{n}{은} 욕심 많은 귀족의 금고만 터는 의적단의 두목이 되었어. 가난한 마을에는 언제나 몰래 금화 주머니가 놓여 있었지.',
     epi: '현상금 전단을 본 아빠는 한숨을 쉬었어. 그런데 그림 속 의적이 아빠가 준 수련복을 입고 있어서, 조금 웃고 말았어.' },
-  { id: 'adventurer', name: '모험가', icon: '🧭', outfit: 'travel', acc: 'sword', bg: '#4a6b2f',
+  { id: 'adventurer', tier: 'A', name: '모험가', icon: '🧭', outfit: 'travel', acc: 'sword', bg: '#4a6b2f',
     hint: '검술·체력이 높고 여행을 많이(10번 이상) 다녀야 해.',
-    req: { st: { swd: 250, hp: 300 }, cnt: { travel: 10 } },
+    req: { st: { swd: 300, hp: 350 }, cnt: { travel: 10 } },
     text: '배낭 하나 메고 {n}{은} 세상 끝을 향해 떠났어. 가끔 먼 나라에서 신기한 기념품과 편지가 날아와.',
     epi: '편지는 언제나 같은 말로 끝났어. 「아빠, 이번에도 무사히 돌아갈게. 루퍼스 아저씨 쿠키 남겨 둬.」' },
-  { id: 'guard', name: '근위 기사', icon: '⚔️', outfit: 'armor', acc: 'none', bg: '#2f4f6b',
+  { id: 'guard', tier: 'A', name: '근위 기사', icon: '⚔️', outfit: 'armorBlue', acc: 'none', bg: '#2f4f6b',
     hint: '검술이 높고 기품도 갖춰야 해.',
-    req: { st: { swd: 300, ele: 250 } },
+    req: { st: { swd: 300, ele: 220 } },
     text: '{n}{은} 리아나 공주를 지키는 근위 기사가 되었어. 우아하면서도 강한 {n}{은} 왕궁에서 가장 믿음직한 기사였어.',
     epi: '공주는 가끔 몰래 성을 빠져나가 별빛 언덕으로 놀러 왔어. 물론 호위 기사도 함께. 둘은 그때마다 아빠의 스튜를 세 그릇씩 먹었대.' },
-  { id: 'healer', name: '치유사', icon: '💊', outfit: 'choir', acc: 'none', bg: '#2f6b4a',
+  { id: 'magicknight', tier: 'A', name: '마법 기사', icon: '⚡', outfit: 'armorViolet', acc: 'staff', bg: '#2f3f7a',
+    hint: '검술과 마력을 둘 다 높이면…',
+    req: { st: { swd: 300, mag: 260 } },
+    text: '{n}{은} 검에 별빛 마법을 실어 싸우는 마법 기사가 되었어. 국경 수비대의 아이들은 {n}의 빛나는 검을 보며 꿈을 키웠어.',
+    epi: '첫 임무를 마치고 돌아온 날, {n}{은} 아빠의 낡은 검을 닦으며 말했어. "아빠 검은 마법이 없어도 제일 빛나."' },
+  { id: 'strategist', tier: 'A', name: '기사단 참모', icon: '🗺️', outfit: 'train', acc: 'book', bg: '#3a4f6b',
+    hint: '검술과 지능을 함께 갖추면…',
+    req: { st: { swd: 260, int: 320 } },
+    text: '{n}{은} 기사단의 참모가 되었어. 싸우지 않고 이기는 작전으로, 다시는 국경 마을이 불타지 않게 지켜 냈어.',
+    epi: '작전 회의 탁자 위엔 언제나 작은 목마가 놓여 있었어. 열 살 때 아빠가 깎아 준 장난감이었지.' },
+  { id: 'healer', tier: 'A', name: '치유사', icon: '💊', outfit: 'choir', acc: 'none', bg: '#2f6b4a',
     hint: '지능·도덕이 높고 마력도 조금 있어야 해.',
-    req: { st: { int: 300, mor: 280, mag: 150 } },
+    req: { st: { int: 370, mor: 300, mag: 150 } },
     text: '{n}{은} 마을에 작은 진료소를 열었어. 약초와 치유 마법으로 아픈 사람들을 돌보는 {n}{을} 모두가 고마워했어.',
     epi: '진료소 첫 손님은 비 오는 날마다 무릎이 쑤시는 은퇴한 기사였어. 치료비는 평생 무료래.' },
-  { id: 'diva', name: '무대의 가희', icon: '🎤', outfit: 'star', acc: 'mic', bg: '#6b2f4a',
-    hint: '매력이 아주 높고 감성도 높아야 해.',
-    req: { st: { cha: 400, sen: 280 } },
+  { id: 'astrologer', tier: 'A', name: '왕실 점성술사', icon: '🔭', outfit: 'starrobe', acc: 'hat', bg: '#1d2557',
+    hint: '마력과 기품을 함께 갖추면…',
+    req: { st: { mag: 280, ele: 260 } },
+    text: '{n}{은} 왕궁 탑 꼭대기에서 별을 읽는 왕실 점성술사가 되었어. {n}{이} 예언한 풍년과 평화는 한 번도 틀린 적이 없었대.',
+    epi: '{n}{이} 가장 아끼는 별자리는 「기사자리」. 지붕 위에서 아빠와 처음 찾았던 바로 그 별이야.' },
+  { id: 'researcher', tier: 'A', name: '마법탑 연구원', icon: '⚗️', outfit: 'labcoat', acc: 'book', bg: '#3b2f6b',
+    hint: '마력과 지능을 함께 갖추면…',
+    req: { st: { mag: 300, int: 350 } },
+    text: '{n}{은} 마법탑의 연구원이 되었어. 밤새 별빛을 병에 담는 실험을 하다가, 아침이면 꾸벅꾸벅 졸며 아빠에게 편지를 썼어.',
+    epi: '{n}{이} 발명한 「꺼지지 않는 별빛 등불」은 국경 마을 집집마다 걸렸어. 다시는 어둠 속에서 우는 아이가 없도록.' },
+  { id: 'diva', tier: 'A', name: '무대의 가희', icon: '🎤', outfit: 'star', acc: 'mic', bg: '#6b2f4a',
+    hint: '매력이 아주 높고 감성도 있어야 해. 무대에 서려면 평판도 필요해.',
+    req: { st: { cha: 420, sen: 250 }, fame: 150 },
     text: '극장 무대에 선 {n}의 노래에 관객들이 눈물을 흘렸어. {n}{은} 왕도에서 가장 사랑받는 가희가 되었어.',
     epi: '공연이 끝나면 맨 앞줄 가운데 자리는 늘 비워 두었어. 무릎이 아파 늦게 오는 한 관객을 위해서.' },
-  { id: 'writer', name: '소설가', icon: '✒️', outfit: 'check', acc: 'book', bg: '#4a3f6b',
+  { id: 'writer', tier: 'A', name: '소설가', icon: '✒️', outfit: 'check', acc: 'book', bg: '#4a3f6b',
     hint: '지능과 감성이 둘 다 높아야 해.',
-    req: { st: { int: 300, sen: 300 } },
+    req: { st: { int: 340, sen: 340 } },
     text: '{n}{이} 쓴 모험 소설이 큰 인기를 끌었어. 아이들은 밤마다 {n}의 책을 읽으며 잠들었대.',
     epi: '소설 속 주인공을 구해 준 무뚝뚝한 기사의 이름은 끝내 나오지 않았어. 독자들은 궁금해했지만, 한 사람만은 알고 있었지.' },
-  { id: 'socialite', name: '사교계의 꽃', icon: '🌹', outfit: 'rose', acc: 'flower', bg: '#6b2f3f',
+  { id: 'socialite', tier: 'A', name: '사교계의 꽃', icon: '🌹', outfit: 'silk', acc: 'tiara', bg: '#6b2f3f',
     hint: '기품·매력이 높아야 해.',
     req: { st: { ele: 350, cha: 300 } },
     text: '{n}{은} 왕도 사교계에서 가장 빛나는 사람이 되었어. {n}{이} 여는 다과회에는 귀족도 평민도 함께 웃었어.',
     epi: '다과회 초대장 맨 아래에는 늘 같은 한 줄이 있었어. 「드레스가 없는 분도 환영합니다. 저도 처음엔 무명 원피스뿐이었어요.」' },
-  { id: 'orphanage', name: '고아원 원장', icon: '🏠', outfit: 'apron', acc: 'none', bg: '#5a4f3a',
+  { id: 'designer', tier: 'A', name: '왕실 의상 디자이너', icon: '✂️', outfit: 'designer', acc: 'flower', bg: '#6b3f5a',
+    hint: '감성과 기품이 함께 높으면…',
+    req: { st: { sen: 320, ele: 280 } },
+    text: '{n}{이} 지은 드레스가 왕궁 무도회에서 화제가 되었어. {n}{은} 왕실 의상실을 맡아 왕국의 유행을 이끌었어.',
+    epi: '왕실 의상실 진열장 한가운데에는 낡은 무명 원피스 한 벌이 걸려 있었어. 루퍼스가 처음 고쳐 준 바로 그 옷.' },
+  { id: 'orphanage', tier: 'A', name: '고아원 원장', icon: '🏠', outfit: 'apron', acc: 'none', bg: '#5a4f3a',
     hint: '도덕이 높고 요리도 할 줄 알아야 해. 성당 고아원과 인연을 쌓아야 해.',
     req: { st: { mor: 250, cook: 120 }, flags: { orphan: 2 } },
     text: '{n}{은} 전쟁으로 부모를 잃은 아이들을 위해 고아원을 열었어. 아이들은 {n}{을} "언니 원장님"이라고 부르며 따랐어.',
     epi: '고아원 이름은 「별빛 언덕의 집」. 첫 번째 규칙은 벽에 크게 쓰여 있었어. 「손을 내미는 어른이 되자.」' },
-  { id: 'nun', name: '수녀', icon: '📿', outfit: 'nun', acc: 'nunveil', bg: '#30324a',
-    hint: '도덕이 높고 성당 일을 많이(15번 이상) 해야 해.',
-    req: { st: { mor: 300 }, cnt: { church: 15 } },
+  { id: 'nun', tier: 'A', name: '수녀', icon: '📿', outfit: 'nun', acc: 'nunveil', bg: '#30324a',
+    hint: '도덕이 높고 성당 일을 아주 많이(40번 이상) 해야 해.',
+    req: { st: { mor: 400 }, cnt: { church: 40 } },
     text: '{n}{은} 성당에 남아 수녀가 되었어. 고아원 아이들에게 {n}{은} 엄마이자 언니 같은 존재였어.',
     epi: '매일 저녁 기도 끝에 {n}{은} 짧게 덧붙였어. "그리고 아빠 무릎이 덜 아프게 해 주세요."' },
-  { id: 'teacher', name: '마을 선생님', icon: '🍎', outfit: 'sailor', acc: 'glasses', bg: '#4a6b3f',
+  { id: 'teacher', tier: 'A', name: '마을 선생님', icon: '🍎', outfit: 'sailor', acc: 'glasses', bg: '#4a6b3f',
     hint: '지능·도덕이 적당히 높아야 해.',
-    req: { st: { int: 280, mor: 220 } },
+    req: { st: { int: 370, mor: 280 } },
     text: '{n}{은} 마을 학교의 선생님이 되었어. 엄하지만 다정한 {n} 선생님을 아이들은 무척 좋아했어.',
     epi: '엘마 선생님이 쓰던 낡은 교탁은 이제 {n}의 것이 되었어. 서랍 안에는 열 살 때 받은 칭찬 스티커가 아직 붙어 있었어.' },
-  { id: 'baker', name: '빵집 주인', icon: '🥖', outfit: 'apron', acc: 'bread', bg: '#7a5a3a',
-    hint: '요리가 높고 빵집 일을 많이(20번 이상) 해야 해.',
-    req: { st: { cook: 250 }, cnt: { bakery: 20 } },
+  { id: 'baker', tier: 'A', name: '빵집 주인', icon: '🥖', outfit: 'apron', acc: 'bread', bg: '#7a5a3a',
+    hint: '요리가 높고 빵집 일을 아주 많이(60번 이상) 해야 해.',
+    req: { st: { cook: 320 }, cnt: { bakery: 60 } },
     text: '일하던 빵집을 물려받은 {n}. 새벽마다 고소한 냄새가 골목에 퍼지면 사람들이 줄을 섰어.',
     epi: '마사 할머니는 가게 구석 흔들의자에 앉아 손님들에게 자랑했어. "저 반죽 솜씨, 내가 가르쳤지."' },
-  { id: 'hostess', name: '주점 여주인', icon: '🍻', outfit: 'apron', acc: 'flower', bg: '#6b3f2f',
-    hint: '주점 일을 많이(20번 이상) 하고 매력도 있어야 해.',
-    req: { st: { cha: 220 }, cnt: { tavern: 20 } },
+  { id: 'hostess', tier: 'A', name: '주점 여주인', icon: '🍻', outfit: 'apron', acc: 'flower', bg: '#6b3f2f',
+    hint: '주점 일을 아주 많이(60번 이상) 하고 매력도 있어야 해.',
+    req: { st: { cha: 320 }, cnt: { tavern: 60 } },
     text: '{n}{은} 그레타 아줌마의 주점을 물려받았어. 뱃사람들의 이야기와 노래가 끊이지 않는 활기찬 가게였어.',
     epi: '주점 벽에는 「기사님 전용석」이 하나 있었어. 그 자리에 앉은 손님에게는 언제나 우유가 나왔대.' },
-  { id: 'farmer', name: '농장주', icon: '🐄', outfit: 'hunt', acc: 'strawhat', bg: '#4f6b2f',
-    hint: '체력이 높고 농장 일을 많이(25번 이상) 해야 해.',
-    req: { st: { hp: 280 }, cnt: { farm: 25 } },
+  { id: 'farmer', tier: 'A', name: '농장주', icon: '🐄', outfit: 'hunt', acc: 'strawhat', bg: '#4f6b2f',
+    hint: '체력이 높고 농장 일을 아주 많이(60번 이상) 해야 해.',
+    req: { st: { hp: 380 }, cnt: { farm: 60 } },
     text: '{n}{은} 톰 아저씨의 농장 옆 들판을 사서 농장을 일궜어. 황금빛 밀밭과 통통한 젖소들, 수확철이면 온 마을이 잔치를 벌였어.',
     epi: '농장에서 처음 태어난 송아지 이름은 「루퍼스」. 루퍼스 아저씨는 영광인지 모욕인지 한참 고민했대.' },
-  { id: 'dadsgirl', name: '아빠의 곁에서', icon: '🏡', outfit: 'sky', acc: 'flower', bg: '#6b4f5a', hidden: true,
-    hint: '특별한 길은 없지만… 아빠와 아주아주 가까워지면.',
-    req: { aff: 90 },
+  { id: 'dadsgirl', tier: 'D', name: '아빠의 곁에서', icon: '🏡', outfit: 'sky', acc: 'flower', bg: '#6b4f5a', hidden: true,
+    hint: '특별한 길은 없지만… 딸과의 시간을 아주 많이 보내고, 아빠와의 사이가 최고라면.',
+    req: { aff: 90, flags: { dadtime: 60 } },
     text: '{n}{은} 거창한 꿈 대신 별빛 언덕의 작은 집을 택했어. 아빠의 텃밭을 가꾸고, 루퍼스 아저씨와 장을 보고, 마을 사람들을 도우며 살았어.',
     epi: '저녁마다 둘은 현관 계단에 나란히 앉아 별을 봤어. "아빠, 그날 손 내밀어 줘서 고마워." "…내가 더 고맙다."' },
-  { id: 'villager', name: '평범한 마을 아가씨', icon: '🌼', outfit: 'basic', acc: 'none', bg: '#4f5a6b',
+  { id: 'villager', tier: 'Z', name: '평범한 마을 아가씨', icon: '🌼', outfit: 'basic', acc: 'none', bg: '#4f5a6b',
     hint: '특별한 길을 정하지 않으면…',
     req: {},
     text: '{n}{은} 특별한 이름을 남기진 않았지만, 마을 사람들 모두에게 사랑받는 아가씨로 자랐어. 소박하고 따뜻한 나날이 이어졌어.',
@@ -823,75 +869,75 @@ const BOSS_LINES = {
 // cond(s, t=능력치, a=나이, cm=달 0~11) · month: 그 달에만 · repeat: 여러 번 · weight 99: 조건 맞으면 반드시
 const EVENTS = [
   // ---------- 하루 (소꿉친구) ----------
-  { id: 'haru1', icon: '👦', title: '울타리 너머의 아이', cond: (s, t, a) => a <= 11 && !s.flags.haru,
+  { id: 'haru1', icon: '👦', title: '울타리 너머의 아이', cond: (s, t, a) => a <= 12 && !s.flags.haru,
     lines: [['n', '마당에서 혼자 돌멩이를 줍던 {n}에게 옆집 대장간 아이가 말을 걸었어.'], ['haru', '야! 너 새로 왔지? 나 하루야. 같이 개구리 잡으러 갈래?'], ['me', '…개구리?']],
     choices: [{ t: '같이 놀다 오렴', fx: { stress: -12, cha: 3, haru: 1, aff: 2 }, after: [['me', '아빠! 하루가 개구리 다섯 마리나 잡았어! 나는 세 마리!', 'happy']] },
               { t: '공부 먼저 하자', fx: { int: 5, stress: 6, haru: 1 }, after: [['haru', '치, 그럼 내일 놀자! 약속이다!'], ['me', '…응, 약속.']] }] },
-  { id: 'haru2', icon: '💢', title: '하루와 싸웠어', cond: (s, t, a) => a >= 11 && a <= 12 && s.flags.haru === 1,
+  { id: 'haru2', icon: '💢', title: '하루와 싸웠어', cond: (s, t, a) => a >= 11 && a <= 13 && s.flags.haru === 1,
     lines: [['n', '{n}{이} 울면서 집에 돌아왔어.'], ['me', '하루가… 아빠는 진짜 아빠도 아니라고 했어.', 'cry'], ['rufus', '(조용히) 기사님, 어떻게 하시겠습니까?']],
     choices: [{ t: '꼭 안아 주고 함께 하루네 간다', fx: { aff: 8, mor: 4, haru: 1 }, after: [['haru', '…미안해. 우리 아빠가 그런 말 하는 거 아니래. 너네 아빠, 진짜 아빠 맞아.'], ['me', '…알았어. 대신 내일 개구리 잡는 거 너가 다 해.', 'happy']] },
               { t: '스스로 화해해 보라고 한다', fx: { int: 3, stress: 8, haru: 1 }, after: [['n', '사흘 뒤, 하루가 어설프게 접은 종이꽃을 들고 찾아왔어.'], ['me', '…용서해 줄게. 이번만.']] }] },
-  { id: 'haru3', icon: '🗡️', title: '하루의 꿈', cond: (s, t, a) => a >= 13 && a <= 14 && s.flags.haru === 2,
+  { id: 'haru3', icon: '🗡️', title: '하루의 꿈', cond: (s, t, a) => a >= 12 && a <= 15 && s.flags.haru === 2,
     lines: [['haru', '아저씨! 아저씨 예전에 기사였죠? 저 기사가 되고 싶어요!'], ['me', '하루가 기사? 넘어지기 대장이?'], ['haru', '시끄러! …아저씨, 저 좀 가르쳐 주세요.']],
     choices: [{ t: '둘 다 마당으로 나와라', fx: { swd: 8, str: 4, haru: 1, aff: 3 }, after: [['n', '그날 저녁까지 마당에 목검 소리가 울렸어.'], ['haru', '{n}, 너 왜 나보다 잘하냐…'], ['me', '헤헤, 우리 아빠한테 배웠으니까.', 'happy']] },
               { t: '볼드 사범을 소개해 준다', fx: { swd: 4, haru: 1 }, after: [['bold', '대장간 꼬맹이로군. 팔 힘은 쓸 만하겠어. 내일부터 나와.'], ['haru', '감사합니다!']] }] },
-  { id: 'haru4', icon: '🎒', title: '하루가 떠나는 날', cond: (s, t, a) => a >= 15 && a <= 16 && s.flags.haru === 3,
+  { id: 'haru4', icon: '🎒', title: '하루가 떠나는 날', cond: (s, t, a) => a >= 14 && a <= 17 && s.flags.haru === 3,
     lines: [['haru', '나… 견습 기사 시험에 붙었어. 다음 주에 왕도로 가.'], ['me', '…그래? 축하해. 잘됐다.', 'sulky'], ['n', '{n}{은} 웃었지만, 그날 밤 방에서 한참 뒤척였어.']],
     choices: [{ t: '손수건에 수를 놓아 선물하자', fx: { sen: 6, haru: 1, stress: -5 }, after: [['haru', '이거… 별 모양이네. 평생 갖고 다닐게.'], ['me', '잃어버리면 가만 안 둬.', 'happy']] },
               { t: '부적을 만들어 주자', fx: { mag: 5, haru: 1, stress: -5 }, after: [['haru', '오, 진짜 마법 부적이야? 이거 있으면 안 다치겠다!'], ['me', '…다치지 마. 진짜로.']] }] },
-  { id: 'haru5', icon: '✉️', title: '왕도에서 온 편지', cond: (s, t, a) => a >= 17 && s.flags.haru === 4,
+  { id: 'haru5', icon: '✉️', title: '왕도에서 온 편지', cond: (s, t, a) => a >= 15 && s.flags.haru === 4,
     lines: [['n', '하루에게서 편지가 왔어. 삐뚤빼뚤한 글씨 그대로였어.'], ['haru', '「나 드디어 정식 기사가 됐어! 근데 {n}, 너는 뭐가 될 거야? 뭐가 되든 내가 제일 먼저 축하해 줄게.」'], ['me', '…뭐가 될까, 나. 아빠는 어떻게 생각해?']],
     choices: [{ t: '"네가 웃을 수 있는 거라면 뭐든."', fx: { sen: 5, aff: 6, stress: -10, haru: 1 }, after: [['me', '…그 대답, 반칙이야. 그래도 좋아.', 'happy']] }] },
 
   // ---------- 리아나 공주 ----------
-  { id: 'liana1', icon: '🧕', title: '시장의 수상한 소녀', cond: (s, t, a) => a >= 11 && a <= 13 && !s.flags.liana,
+  { id: 'liana1', icon: '🧕', title: '시장의 수상한 소녀', cond: (s, t, a) => a >= 10 && a <= 13 && s.m >= 8 && !s.flags.liana,
     lines: [['n', '장터에서 두건을 깊이 쓴 소녀의 지갑을 소매치기가 낚아챘어!'], ['liana', '앗, 내 지갑! 누가 좀 잡아 줘요!'], ['me', '아빠, 어떡해?', 'surprise']],
     choices: [{ t: '뒤쫓아 가라!', fx: { str: 3, fame: 5, liana: 1 }, after: [['n', '{n}{이} 골목 끝에서 소매치기의 발을 걸었어. 두건이 벗겨진 소녀의 머리 위에서 작은 티아라가 반짝였어.'], ['liana', '쉿! 나 리아나야. …이 나라 공주. 비밀 지켜 줄 거지?']] },
               { t: '경비병을 불러라', fx: { int: 3, liana: 1 }, after: [['n', '경비병들이 소매치기를 붙잡았어. 그런데 경비병들이 소녀를 보더니 모두 무릎을 꿇었어.'], ['liana', '아, 들켰다… 나 리아나야. 고마워, 친구!']] }] },
-  { id: 'liana2', icon: '🍲', title: '공주님의 가출', cond: (s, t, a) => a >= 12 && a <= 14 && s.flags.liana === 1,
+  { id: 'liana2', icon: '🍲', title: '공주님의 가출', cond: (s, t, a) => a >= 11 && a <= 15 && s.flags.liana === 1,
     lines: [['n', '밤늦게 누가 창문을 두드렸어. 리아나 공주였어!'], ['liana', '궁에서 너무 답답해서 몰래 나왔어. {n}, 너희 집 밥 먹어 보고 싶어!'], ['rufus', '(작게) 기사님… 이건 반역죄일까요, 환대일까요.']],
     choices: [{ t: '아빠표 스튜를 끓여 준다', fx: { cook: 3, aff: 3, liana: 1, stress: -8 }, after: [['liana', '세상에, 궁전 요리보다 맛있어! 나 매일 올래!'], ['me', '매일은 안 돼. 아빠 잡혀가.', 'happy'], ['n', '새벽에 루퍼스가 공주를 몰래 성문까지 데려다줬어.']] },
               { t: '조용히 성으로 돌려보낸다', fx: { mor: 5, liana: 1 }, after: [['liana', '…알았어. 대신 다음엔 낮에 정식으로 놀러 올게!']] }] },
-  { id: 'liana3', icon: '🫖', title: '왕궁 다과회 초대장', cond: (s, t, a) => a >= 14 && a <= 16 && s.flags.liana === 2 && t.ele >= 120,
+  { id: 'liana3', icon: '🫖', title: '왕궁 다과회 초대장', cond: (s, t, a) => a >= 13 && a <= 16 && s.flags.liana === 2 && t.ele >= 100,
     lines: [['n', '왕궁 문장이 찍힌 초대장이 왔어. 리아나 공주의 다과회래.'], ['me', '왕궁…? 나 같은 애가 가도 돼?', 'surprise'], ['rufus', '드레스와 예물 준비에 100G쯤 들겠습니다.']],
     choices: [{ t: '당당하게 다녀와라 (-100G)', need: 100, fx: { gold: -100, ele: 10, cha: 5, liana: 1 }, after: [['liana', '모두들 봐! 이 아이가 내 제일 친한 친구야!'], ['n', '귀족들이 수군거렸지만, {n}{은} 마담 로즈에게 배운 인사로 모두를 조용하게 만들었어.']] },
               { t: '정중하게 사양한다', fx: { mor: 3 }, after: [['me', '…다음에 더 멋진 숙녀가 되면 갈게.']] }] },
-  { id: 'liana4', icon: '🕊️', title: '공주의 고민', cond: (s, t, a) => a >= 16 && s.flags.liana === 3,
+  { id: 'liana4', icon: '🕊️', title: '공주의 고민', cond: (s, t, a) => a >= 15 && s.flags.liana === 3,
     lines: [['liana', '다음 달에 이웃 나라와 평화 회담이 있어. 내가 나서야 하는데… 무서워.'], ['liana', '전쟁이 또 나면 어떡하지? 난 전쟁을 본 적도 없는데.'], ['me', '…나는 봤어. 그래서 알아.']],
     choices: [{ t: '{n}에게 이야기를 맡긴다', fx: { int: 6, ele: 6, liana: 1, mor: 4 }, after: [['me', '불타는 마을에서 아빠가 손을 내밀어 줬어. 회담도 그런 거야. 먼저 손을 내미는 거.'], ['liana', '…고마워, {n}. 나 해 볼게.']] },
               { t: '"같이 도망가서 놀자!"는 딸을 말리지 않는다', fx: { cha: 5, stress: -10, liana: 1, mor: -3 }, after: [['n', '둘은 하루 종일 별빛 언덕을 뛰어다녔어. 돌아온 공주의 얼굴은 한결 밝았어.']] }] },
 
   // ---------- 비앙카 (라이벌) ----------
-  { id: 'bianca1', icon: '💅', title: '백작 영애 비앙카', cond: (s, t, a) => a >= 11 && a <= 13 && !s.flags.bianca && s.cnt.manner >= 2,
+  { id: 'bianca1', icon: '💅', title: '백작 영애 비앙카', cond: (s, t, a) => a >= 10 && a <= 13 && !s.flags.bianca && s.cnt.manner >= 1,
     lines: [['bianca', '어머, 예절 수업에 전쟁 고아가 들어왔다고? 냄새 나는 거 아니야?'], ['me', '……', 'sulky'], ['rose', '(헛기침) 비앙카 양.']],
     choices: [{ t: '배운 대로 우아하게 인사해', fx: { ele: 6, bianca: 1, stress: 5 }, after: [['me', '처음 뵙겠습니다, 비앙카 님. 앞으로 잘 부탁드려요.'], ['bianca', '……흥. 제법이네.']] },
               { t: '참지 말고 한마디 해', fx: { cha: 3, mor: -3, bianca: 1, stress: -5 }, after: [['me', '냄새는 그 향수에서 나는 것 같은데?'], ['bianca', '뭐, 뭐라고?! 두고 봐!']] }] },
-  { id: 'bianca2', icon: '🧤', title: '던져진 장갑', cond: (s, t, a) => a >= 13 && a <= 15 && s.flags.bianca === 1,
+  { id: 'bianca2', icon: '🧤', title: '던져진 장갑', cond: (s, t, a) => a >= 12 && a <= 15 && s.flags.bianca === 1,
     lines: [['n', '광장 한복판에서 비앙카가 {n}의 발 앞에 장갑을 던졌어.'], ['bianca', '올가을 미인 대회에서 정정당당하게 겨뤄! 내가 이기면 다신 내 앞에 나타나지 마.'], ['me', '…아빠, 이거 주워야 해?']],
     choices: [{ t: '도전을 받아 줘라', fx: { cha: 5, ele: 3, bianca: 1, stress: 5 }, after: [['me', '좋아. 대신 내가 이기면… 친구 해.'], ['bianca', '뭐?! …웃기지 마!']] },
               { t: '상대하지 마렴', fx: { mor: 4, bianca: 1 }, after: [['n', '{n}{은} 장갑을 주워 비앙카에게 공손히 돌려줬어. 비앙카의 얼굴이 새빨개졌어.']] }] },
-  { id: 'bianca3', icon: '🌧️', title: '빗속의 마차', cond: (s, t, a) => a >= 14 && a <= 16 && s.flags.bianca === 2,
+  { id: 'bianca3', icon: '🌧️', title: '빗속의 마차', cond: (s, t, a) => a >= 13 && a <= 16 && s.flags.bianca === 2,
     lines: [['n', '장대비 속, 진흙에 바퀴가 빠진 마차 옆에서 비앙카가 발을 동동 구르고 있었어.'], ['bianca', '마부는 도움 부르러 가고… 드레스가 다 젖겠어…'], ['me', '…저거, 비앙카네.']],
     choices: [{ t: '가서 도와줘라', fx: { str: 3, mor: 6, bianca: 1, stress: 5 }, after: [['n', '{n}{은} 흙투성이가 되어 바퀴를 밀었어. 마차가 빠져나오자 비앙카가 우산을 내밀었어.'], ['bianca', '…왜 도와준 거야? 난 너한테 못되게 굴었는데.'], ['me', '우리 아빠가 그랬거든. 손 내미는 건 이유가 필요 없대.']] },
               { t: '못 본 척 지나가자', fx: { stress: -3 }, after: [['me', '…괜찮겠지, 뭐.', 'sulky']] }] },
-  { id: 'bianca4', icon: '🎁', title: '비앙카의 진심', cond: (s, t, a) => a >= 16 && s.flags.bianca === 3,
+  { id: 'bianca4', icon: '🎁', title: '비앙카의 진심', cond: (s, t, a) => a >= 15 && s.flags.bianca === 3,
     lines: [['bianca', '…저기. 사실 나, 네가 부러웠어.'], ['bianca', '우리 아버지는 나한테 웃어 준 적이 없거든. 너희 아빠는 매일 웃던데.'], ['bianca', '이거, 받아. 우리 집 진주야. …친구 하자는 거 아니니까 착각하지 마!']],
     choices: [{ t: '고맙게 받으렴', fx: { ele: 8, cha: 4, bianca: 1, aff: 2 }, after: [['me', '응. 그럼 친구 아닌 친구 하자.', 'happy'], ['bianca', '…바보.']] }] },
 
   // ---------- 은 목걸이 ----------
-  { id: 'locket1', icon: '🌙', title: '불의 꿈', cond: (s, t, a) => a <= 11 && s.m >= 2 && !s.flags.locket,
+  { id: 'locket1', icon: '🌙', title: '불의 꿈', cond: (s, t, a) => a <= 12 && s.m >= 2 && !s.flags.locket,
     lines: [['n', '한밤중, {n}의 방에서 비명 소리가 들렸어.'], ['me', '불… 불이야… 엄마… 엄마!', 'cry'], ['n', '{n}{은} 땀에 흠뻑 젖은 채 은 목걸이를 꽉 쥐고 있었어.']],
     choices: [{ t: '곁에 앉아 자장가를 불러 준다', fx: { aff: 8, stress: -10, locket: 1 }, after: [['me', '…아빠 노래 진짜 못한다.', 'happy'], ['me', '그래도… 계속 불러 줘.']] },
               { t: '루퍼스에게 따뜻한 우유를 부탁한다', fx: { stress: -14, aff: 3, locket: 1 }, after: [['rufus', '꿀을 듬뿍 넣었습니다, 아가씨. 나쁜 꿈은 우유가 다 먹어 버린답니다.'], ['me', '…정말?']] }] },
-  { id: 'locket2', icon: '🔓', title: '열린 목걸이', cond: (s, t, a) => a >= 12 && a <= 13 && s.flags.locket === 1,
+  { id: 'locket2', icon: '🔓', title: '열린 목걸이', cond: (s, t, a) => a >= 11 && a <= 14 && s.flags.locket === 1,
     lines: [['me', '아빠! 목걸이를 닦다가 딸깍 하고 열렸어!', 'surprise'], ['n', '목걸이 안쪽에는 달과 별이 겹쳐진 작은 문장, 그리고 「E. L.」이라는 글자가 새겨져 있었어.'], ['me', '…이거, 우리 엄마 거였을까?']],
     choices: [{ t: '"같이 알아보자."', fx: { int: 4, locket: 1 }, after: [['me', '응! 엘마 선생님한테 문장 책 빌려볼래.']] },
               { t: '"소중히 간직하렴."', fx: { aff: 5, sen: 3, locket: 1 }, after: [['me', '응… 그래도 언젠가는 알고 싶어.']] }] },
-  { id: 'locket3', icon: '📜', title: '문장을 아는 나그네', cond: (s, t, a) => a >= 14 && a <= 16 && s.flags.locket === 2,
+  { id: 'locket3', icon: '📜', title: '문장을 아는 나그네', cond: (s, t, a) => a >= 13 && a <= 16 && s.flags.locket === 2,
     lines: [['sage', '그 목걸이… 잠깐 볼 수 있겠소? 이건 북부 루나리스 가문의 문장이오.'], ['sage', '전쟁 때 성이 함락되어 일가가 몰살됐다고 들었는데… 아니, 백작 부인 한 분이 살아남으셨다는 소문이 있소.'], ['me', '…살아 있는 사람이, 있어?', 'surprise']],
     choices: [{ t: '더 알아봐 달라고 부탁한다 (-50G)', need: 50, fx: { gold: -50, int: 6, locket: 1 }, after: [['sage', '북부에 가는 길에 수소문해 보겠소. 소식이 닿으면 편지하리다.']] },
               { t: '"서두르지 말자." 딸의 손을 잡는다', fx: { aff: 5, locket: 1 }, after: [['me', '…응. 아빠가 있으니까, 천천히 해도 돼.']] }] },
-  { id: 'locket4', icon: '💌', title: '북부에서 온 편지', cond: (s, t, a) => a >= 16 && s.flags.locket === 3,
+  { id: 'locket4', icon: '💌', title: '북부에서 온 편지', cond: (s, t, a) => a >= 15 && s.flags.locket === 3,
     lines: [['n', '푸른 밀랍으로 봉인된 편지가 도착했어.'], ['eleonora', '「E. L.은 내 딸 엘리스의 이름이란다. 그 아이의 딸이 살아 있다니… 단 한 번만이라도 너를 안아 보고 싶구나. ─ 엘레오노라 루나리스」'], ['me', '…할머니? 나한테… 할머니가 있대.', 'cry']],
     choices: [{ t: '함께 북부로 만나러 가자 (-100G)', need: 100, fx: { gold: -100, ele: 8, sen: 6, locket: 1 }, after: [['eleonora', '엘리스와 똑같은 눈이로구나… 고맙소, 기사님. 이 아이를 지켜 주셔서.'], ['me', '할머니, 나 아빠랑 같이 살아도 돼? 가끔 놀러 올게.'], ['eleonora', '물론이지. 네가 행복한 곳이 네 집이란다.']] },
               { t: '딸의 결정을 기다린다', fx: { aff: 15 }, after: [['me', '…답장 쓸게. 고맙다고. 그리고 내 가족은 지금 여기 있다고.'], ['me', '언젠가 마음이 정리되면, 그때 만나러 갈래.']] }] },
@@ -907,7 +953,8 @@ const EVENTS = [
               { t: '직접 수프를 끓여 가져가자', fx: { cook: 6, mor: 5, orphan: 1, stress: 5 }, after: [['mia', '언니가 끓인 수프 세상에서 제일 맛있어!'], ['me', '헤헤, 아빠한테 배운 거야.', 'happy']] }] },
   { id: 'orphan3', icon: '🌱', title: '미아의 꿈', cond: (s, t, a) => a >= 15 && (s.flags.orphan || 0) >= 2,
     lines: [['mia', '언니, 나도 언니처럼 손 내미는 사람이 될래. 그래서 공부 열심히 하고 있어!'], ['me', '…미아. 너는 나보다 훨씬 멋진 사람이 될 거야.', 'happy']],
-    choices: [{ t: '미아에게 책을 선물한다 (-30G)', need: 30, fx: { gold: -30, mor: 6, orphan: 1 }, after: [['n', '미아는 책을 가슴에 꼭 안고 한참을 놓지 않았어.']] }] },
+    choices: [{ t: '미아에게 책을 선물한다 (-30G)', need: 30, fx: { gold: -30, mor: 6, orphan: 1 }, after: [['n', '미아는 책을 가슴에 꼭 안고 한참을 놓지 않았어.']] },
+              { t: '글자를 직접 가르쳐 준다', fx: { int: 3, mor: 4, orphan: 1, stress: 4 }, after: [['mia', '언니, 이거 「별」이라는 글자지? 언니 이름에도 있는 거!'], ['me', '…응. 맞아.', 'happy']] }] },
 
   // ---------- 선생님 · 일터 ----------
   { id: 'bold1', icon: '🍶', title: '볼드 사범의 옛이야기', cond: (s) => s.cnt.sword >= 5,
@@ -949,7 +996,7 @@ const EVENTS = [
     lines: [['n', '주점에서 뱃사람 둘이 의자를 집어 들고 싸우기 시작했어!'], ['greta', '{n}! 위험하니까 뒤로 빠져!']],
     choices: [{ t: '쟁반으로 막아서 말린다', fx: { str: 4, cha: 5, fame: 5, stress: 6 }, after: [['greta', '하하! 쟁반 하나로 뱃사람 둘을 제압하다니! 오늘 저녁은 내가 쏜다!']] },
               { t: '얌전히 피한다', fx: { int: 3 }, after: [['me', '…그레타 아줌마가 국자로 둘 다 때려눕혔어.']] }] },
-  { id: 'shady1', icon: '🕶️', title: '수상한 제안', cond: (s, t) => s.cnt.tavern >= 5 && t.mor < 220,
+  { id: 'shady1', icon: '🕶️', title: '수상한 제안', repeat: true, key: true, cond: (s, t) => s.cnt.tavern >= 5 && t.mor < 220 && !s.flags.dark,
     lines: [['shady', '꼬마 아가씨, 손이 빠르던데. 밤에 재미있는 일 하나 할래? 금화가 짤랑짤랑하지.'], ['me', '…금화?']],
     choices: [{ t: '(모른 척한다)', fx: { str: 6, swd: 6, mor: -20, gold: 80, dark: 1 }, after: [['n', '{n}{이} 밤늦게 금화를 들고 돌아왔어. 어디서 났는지는 말하지 않았어.']] },
               { t: '절대 안 된다고 막는다', fx: { mor: 8, stress: 5 }, after: [['me', '알았어, 알았다고… 안 가.', 'sulky']] }] },
@@ -1120,10 +1167,10 @@ const EVENTS = [
   { id: 'van3', icon: '🖼️', title: '첫 전시회', cond: (s) => s.cnt.art >= 30,
     lines: [['van', '내 화랑 한쪽 벽을 비워 뒀다. 네 그림으로 채워 보지 않겠나?'], ['me', '제… 제 그림만으로요?', 'surprise']],
     choices: [{ t: '전시회를 열자', fx: { sen: 12, fame: 12, stress: 6 }, after: [['n', '전시회 첫날, 맨 앞줄에 루퍼스와 아빠가 정장을 차려입고 서 있었어.']] }] },
-  { id: 'melissa3', icon: '⚗️', title: '금지된 마법서', cond: (s, t) => t.mag >= 220,
+  { id: 'melissa3', icon: '⚗️', title: '금지된 마법서', key: true, cond: (s, t) => t.mag >= 220,
     lines: [['melissa', '마법탑 지하에 금지된 마법서가 있어. 힘은 엄청나지만… 마음을 갉아먹지.'], ['me', '…조금만 읽어 보면 안 될까?']],
     choices: [{ t: '절대 안 된다', fx: { mor: 8, mag: 4 }, after: [['melissa', '현명한 아빠네. 힘은 천천히 쌓는 거야.']] },
-              { t: '네 판단에 맡긴다', fx: { mag: 15, mor: -12, stress: 8 }, after: [['me', '…무서운 책이었어. 그래도 뭔가 알 것 같아.', 'tired']] }] },
+              { t: '네 판단에 맡긴다', fx: { mag: 15, mor: -12, stress: 8, forbidden: 1 }, after: [['me', '…무서운 책이었어. 그래도 뭔가 알 것 같아.', 'tired']] }] },
   { id: 'church2', icon: '🎄', title: '성탄 성가대', month: 11, cond: (s) => s.cnt.church >= 12,
     lines: [['benedict', '올해 성탄 미사 독창을 {n}에게 맡기고 싶구나.']],
     choices: [{ t: '불러 보렴', fx: { sen: 6, mor: 6, fame: 8 }, after: [['n', '촛불 아래, 맑은 노랫소리가 성당 천장까지 닿았어.']] }] },
@@ -1191,8 +1238,11 @@ const Logic = (() => {
   const pick = arr => arr[Math.floor(rng() * arr.length)];
 
   const TOTAL_MONTHS = 96;
-  const STIPEND = 70;
-  const GAIN = 0.5;   // 수업·일 능력치 상승 배율
+  const STIPEND = 60;   // 10살 기준, 해마다 +10
+  const stipendOf = s => STIPEND + (age(s) - 10) * 10;
+  const GAIN = 0.4;   // 수업·일 능력치 상승 배율
+  const AFF_SOFT = 150;   // 사이가 높을수록 덜 오름
+  const AFF_DRIFT = 1.5;  // 사이가 좋을 때(50 넘게) 딸과 시간을 안 보낸 달에 식는 만큼
   const age = s => 10 + Math.floor(s.m / 12);
   const calMonth = s => (2 + s.m) % 12;           // 0 = 1월
   const yearNo = s => Math.floor(s.m / 12) + 1;   // n년째
@@ -1210,7 +1260,7 @@ const Logic = (() => {
   function fmt(text, s) {
     const n = s.name;
     const b = hasBatchim(n);
-    return text.replace(/\{n\}\{(이라|은|이|을|과|아|도)\}/g, (_, j) => n + JOSA[j][b ? 0 : 1]).replace(/\{n\}/g, n);
+    return text.replace(/\{n\}\{(이라|은|이|을|과|아|도)\}/g, (_, j) => n + JOSA[j][b ? 0 : 1]).replace(/\{n\}/g, () => n);
   }
 
   // ----- 새 게임 -----
@@ -1237,26 +1287,28 @@ const Logic = (() => {
     return Math.min(1000, n * 50);
   }
 
-  // ----- 수업 단계 -----
+  // ----- 수업 단계 · 일 숙련도 (같은 기준) -----
   function lessonLv(s, id) {
     const c = s.cnt[id] || 0;
     let lv = 1;
     for (let i = 0; i < LESSON_LV.length; i++) if (c >= LESSON_LV[i]) lv = i + 1;
     return lv;
   }
-  const lvMult = lv => 1 + (lv - 1) * 0.15;
+  const lvMult = lv => 1 + (lv - 1) * 0.12;
+  const costOf = (s, a) => Math.round((a.cost || 0) * (a.type === 'lesson' ? 1 + (lessonLv(s, a.id) - 1) * 0.15 : 1));
 
-  function payOf(s, a) { return Math.round(a.pay * (1 + (age(s) - 10) * 0.12)); }
+  const jobPayMult = lv => 1 + (lv - 1) * 0.08;
+  function payOf(s, a) { return Math.round(a.pay * (1 + (age(s) - 10) * 0.12) * jobPayMult(lessonLv(s, a.id))); }
 
   function actState(s, a, plannedCost) {
     if (a.minAge && age(s) < a.minAge) return { ok: false, why: `${a.minAge}살부터` };
     if (a.req) for (const k in a.req) if (s.st[k] < a.req[k]) return { ok: false, why: `${STAT_NAME[k]} ${a.req[k]} 필요` };
-    const cost = a.cost || 0;
+    const cost = costOf(s, a);
     if (cost > 0 && s.gold - (plannedCost || 0) < cost) return { ok: false, why: '돈이 모자라' };
     return { ok: true };
   }
   function schedCost(s) {
-    return s.sched.reduce((t, id) => t + (id ? (ACT[id].cost || 0) : 0), 0);
+    return s.sched.reduce((t, id) => t + (id ? costOf(s, ACT[id]) : 0), 0);
   }
 
   // ----- 옷 · 액세서리 -----
@@ -1269,13 +1321,24 @@ const Logic = (() => {
     if (k === 'gold') { s.gold = Math.max(0, s.gold + d); return; }
     if (k === 'stress') { s.stress = clamp(s.stress + d, 0, 100); return; }
     if (k === 'fame') { s.fame = clamp(s.fame + d, 0, 999); return; }
-    if (k === 'aff') { s.aff = clamp(s.aff + d, 0, 100); return; }
+    if (k === 'aff') { s.aff = clamp(s.aff + (d > 0 ? d * (1 - s.aff / AFF_SOFT) : d), 0, 100); return; }
     if (k in s.st) { s.st[k] = clamp(s.st[k] + d, 0, STAT_MAX); return; }
     s.flags[k] = (s.flags[k] || 0) + d;  // 플래그 (friend, prince 등)
   }
+  // 실제로 변한 만큼을 돌려줌 (상한·하한, 사이 완만함 반영)
+  function valueOf(s, k) {
+    if (k === 'gold' || k === 'stress' || k === 'fame' || k === 'aff') return s[k];
+    if (k in s.st) return s.st[k];
+    return null;
+  }
   function applyFx(s, fx) {
     const out = [];
-    for (const k in fx) { addStat(s, k, fx[k]); out.push({ k, d: fx[k] }); }
+    for (const k in fx) {
+      const before = valueOf(s, k);
+      addStat(s, k, fx[k]);
+      const after = valueOf(s, k);
+      out.push({ k, d: before === null ? fx[k] : Math.round(after - before) });
+    }
     return out;
   }
 
@@ -1311,24 +1374,25 @@ const Logic = (() => {
     const mult = { great: 1.5, ok: 1, fail: 0.35 }[res.kind];
 
     // 효과 배율: 수업 단계 · 옷
-    const before = a.type === 'lesson' ? lessonLv(s, id) : 0;
-    let m = a.type === 'lesson' ? lvMult(before) : 1;
+    const leveled = a.type === 'lesson' || a.type === 'job';
+    const before = leveled ? lessonLv(s, id) : 0;
+    let m = leveled ? lvMult(before) : 1;
     m *= gearMult(s, id);
 
     for (const k in a.gain) {
       const base = a.gain[k];
       let d;
       if (base > 0) d = Math.max(res.kind === 'fail' ? 0 : 1, Math.round(base * GAIN * m * mult * (0.8 + rng() * 0.4)));
-      else d = Math.min(-1, Math.round(base * GAIN));
+      else { const x = -base * GAIN; d = -(Math.floor(x) + (rng() < x - Math.floor(x) ? 1 : 0)); }  // 평균만큼만 깎임
       if (d !== 0) { addStat(s, k, d); res.changes.push({ k, d }); }
     }
 
-    // 돈
+    // 돈 (일 숙련도 반영은 payOf 안에서)
     if (a.type === 'job') {
       const g = Math.round(payOf(s, a) * (res.kind === 'great' ? 1.5 : res.kind === 'fail' ? 0.4 : 1));
       s.gold += g; res.gold = g;
     } else if (a.cost) {
-      const c = Math.min(s.gold, a.cost);
+      const c = Math.min(s.gold, costOf(s, a));
       s.gold -= c; res.gold = -c;
     }
 
@@ -1342,15 +1406,16 @@ const Logic = (() => {
     if (a.type === 'job' && res.kind !== 'fail' && !a.fame) addStat(s, 'fame', 0.5);
 
     s.cnt[id] = (s.cnt[id] || 0) + 1;
-    if (a.type === 'lesson' && lessonLv(s, id) > before) res.lvUp = lessonLv(s, id);
+    if (leveled && lessonLv(s, id) > before) res.lvUp = lessonLv(s, id);
     return res;
   }
 
   // ----- 달 마감 -----
   function monthEnd(s) {
-    const out = { stipend: STIPEND, bonus: [], runaway: false };
-    s.gold += STIPEND;
+    const out = { stipend: stipendOf(s), bonus: [], runaway: false };
+    s.gold += out.stipend;
     for (const g of gear(s)) if (g.bonus) out.bonus = out.bonus.concat(applyFx(s, g.bonus));
+    if (s.talkedM !== s.m && s.aff > 50) addStat(s, 'aff', -Math.min(AFF_DRIFT, s.aff - 50));
     s.fame = Math.round(s.fame * 10) / 10;
     // 아빠와 사이가 좋으면 집을 나가지 않아
     if (s.stress >= 100 && s.st.mor < 200 && s.aff < 60 && rng() < 0.5) { s.runaway = true; out.runaway = true; }
@@ -1369,7 +1434,7 @@ const Logic = (() => {
     addStat(s, 'mor', -10);
     addStat(s, 'fame', -25);
     addStat(s, 'aff', -10);
-    s.gold += STIPEND;
+    s.gold += stipendOf(s);
     s.m++;
     return { lost };
   }
@@ -1388,7 +1453,7 @@ const Logic = (() => {
     const pool = EVENTS.filter(e => e.weight !== 99 && eventOK(s, e) && !(e.repeat && s.seen[e.id] && rng() < 0.6));
     if (!pool.length) return null;
     // 인물 이야기는 더 자주 나오게
-    const w = e => /^(haru|liana|bianca|locket|orphan)\d/.test(e.id) ? 5 : e.month !== undefined ? 3 : 1;
+    const w = e => /^(haru|liana|bianca|locket|orphan)\d/.test(e.id) ? 6 : e.key ? 4 : e.month !== undefined ? 3 : 1;
     let total = pool.reduce((t, e) => t + w(e), 0), r = rng() * total;
     for (const e of pool) { r -= w(e); if (r <= 0) return e; }
     return pool[pool.length - 1];
@@ -1461,6 +1526,7 @@ const Logic = (() => {
     if (req.flags) for (const k in req.flags) if ((s.flags[k] || 0) < req.flags[k]) return false;
     if (req.gold && s.gold < req.gold) return false;
     if (req.aff && s.aff < req.aff) return false;
+    if (req.fame && s.fame < req.fame) return false;
     if (req.runaways && s.runaways < req.runaways) return false;
     return true;
   }
@@ -1474,6 +1540,7 @@ const Logic = (() => {
     if (req.flags) for (const k in req.flags) parts.push(Math.min(1, (s.flags[k] || 0) / req.flags[k]));
     if (req.gold) parts.push(Math.min(1, s.gold / req.gold));
     if (req.aff) parts.push(Math.min(1, s.aff / req.aff));
+    if (req.fame) parts.push(Math.min(1, s.fame / req.fame));
     if (req.runaways) parts.push(Math.min(1, s.runaways / req.runaways));
     if (!parts.length) return 0;
     // '도덕이 낮아야' 같은 상한 조건은 다른 조건이 반쯤 찼을 때만 진척으로 쳐
@@ -1484,8 +1551,43 @@ const Logic = (() => {
     }
     return avg;
   }
+  // 같은 등급 안에서 고를 때: 조건마다 '얼마나 넘겼나(배수)'를 보고 가장 아슬아슬한 조건으로 비교.
+  // 이야기·우승 조건은 채웠으면 넉넉한 것으로 침. 같으면 ENDINGS 앞쪽(더 어려운 쪽)이 이김
+  const FIT_CAP = 3;
+  function reqFit(s, req) {
+    let low = FIT_CAP;
+    const r = (v, t) => { low = Math.min(low, v / t); };
+    if (req.st) for (const k in req.st) r(s.st[k], req.st[k]);
+    if (req.max) for (const k in req.max) low = Math.min(low, 1 + Math.max(0, req.max[k] - s.st[k]) / 100);
+    if (req.cnt) for (const k in req.cnt) r(s.cnt[k] || 0, req.cnt[k]);
+    if (req.gold) r(s.gold, req.gold);
+    if (req.aff) r(s.aff, req.aff);
+    if (req.fame) r(s.fame, req.fame);
+    return low;
+  }
+  // X의 조건이 Y의 조건을 모두 포함하고 더 높으면 X가 Y를 '덮음' (예: 치유사 ⊃ 교사)
+  function covers(X, Y) {
+    let more = false;
+    const groups = ['st', 'cnt', 'wins', 'flags'];
+    for (const g of groups) for (const k in (Y[g] || {})) {
+      if (!X[g] || X[g][k] === undefined || X[g][k] < Y[g][k]) return false;
+      if (X[g][k] > Y[g][k]) more = true;
+    }
+    for (const k of ['gold', 'fame', 'aff']) if (Y[k] !== undefined) { if (X[k] === undefined || X[k] < Y[k]) return false; if (X[k] > Y[k]) more = true; }
+    if (Y.max) return false;
+    for (const g of groups) for (const k in (X[g] || {})) if (!Y[g] || Y[g][k] === undefined) more = true;
+    for (const k of ['gold', 'fame', 'aff']) if (X[k] !== undefined && Y[k] === undefined) more = true;
+    return more;
+  }
+  const TIER_ORDER = ['S', 'H', 'A', 'W', 'D', 'Z'];
   function decideEnding(s) {
-    for (const e of ENDINGS) if (reqMet(s, e.req)) return e;
+    for (const t of TIER_ORDER) {
+      const met = ENDINGS.filter(e => e.tier === t && reqMet(s, e.req));
+      const cand = met.filter(y => !met.some(x => x !== y && covers(x.req, y.req)));
+      let best = null, bv = -1;
+      for (const e of cand) { const v = reqFit(s, e.req); if (v > bv) { bv = v; best = e; } }
+      if (best) return best;
+    }
     return ENDING.villager;
   }
   function nearestEnding(s) {
@@ -1509,10 +1611,10 @@ const Logic = (() => {
   // ----- 딸과의 시간 (한 달에 한 번) -----
   const DAD_ACTS = [
     { id: 'talk', name: '대화하기', icon: '💬', desc: '사이 ↑ 스트레스 ↓', fx: { aff: 4, stress: -8 } },
-    { id: 'walk', name: '함께 산책', icon: '🌳', desc: '사이 ↑ 체력·감성 ↑', fx: { aff: 3, stress: -6, hp: 2, sen: 2 } },
+    { id: 'walk', name: '함께 산책', icon: '🌳', desc: '사이 ↑ 체력·감성 조금 ↑', fx: { aff: 3, stress: -6, hp: 1, sen: 1 } },
     { id: 'money', name: '용돈 주기', icon: '🪙', desc: '스트레스 ↓↓ 돈이 들어', fx: { stress: -15, aff: 2, mor: -1 } },
-    { id: 'praise', name: '칭찬하기', icon: '👏', desc: '사이 ↑ 매력 ↑', fx: { aff: 5, stress: -4, cha: 2 } },
-    { id: 'scold', name: '꾸짖기', icon: '☝️', desc: '도덕 ↑ 스트레스 ↑ 사이 ↓', fx: { mor: 8, stress: 10, aff: -4 } },
+    { id: 'praise', name: '칭찬하기', icon: '👏', desc: '사이 ↑ 매력 조금 ↑', fx: { aff: 4, stress: -4, cha: 1 } },
+    { id: 'scold', name: '꾸짖기', icon: '☝️', desc: '도덕 ↑ 스트레스 ↑ 사이 ↓', fx: { mor: 4, stress: 10, aff: -5 } },
   ];
   const allowance = s => 20 + age(s) * 5;
   function dadTime(s, id) {
@@ -1533,6 +1635,7 @@ const Logic = (() => {
     else if (id === 'praise') lines = [['dad', pick(['요즘 정말 열심히 하는구나. 대견하다.', '네가 자랑스럽다.', '오늘도 수고했다.'])], ['me', pick(['헤헤… 갑자기 왜 그래.', '…더 열심히 할게!', '아빠가 칭찬하니까 이상해. 좋은 쪽으로.']), 'happy']];
     else lines = [['dad', pick(['요즘 행동이 좀 지나치구나.', '해야 할 일을 소홀히 하면 안 된다.', '말투가 많이 거칠어졌어.'])], ['me', pick(['…알았어.', '잔소리…', '…미안해.']), 'sulky']];
     s.talkedM = s.m;
+    s.flags.dadtime = (s.flags.dadtime || 0) + 1;
     return { lines, changes: applyFx(s, fx) };
   }
 
@@ -1577,7 +1680,7 @@ const Logic = (() => {
 
   return {
     setRng, TOTAL_MONTHS, STIPEND, josa, age, calMonth, yearNo, isBirthday, isFestival, fmt, hasBatchim,
-    newGame, lessonLv, lvMult, payOf, actState, schedCost, applyFx, runSlot, monthEnd, resolveRunaway,
+    newGame, lessonLv, lvMult, payOf, costOf, AFF_SOFT, reqFit, covers, actState, schedCost, applyFx, runSlot, monthEnd, resolveRunaway,
     pickEvent, chooseEvent, eventOK, birthdayGifts, contestPower, rivalBase, runContest,
     reqMet, reqProgress, decideEnding, nearestEnding, mood, stage, addStat,
     checkTitles, DAD_ACTS, allowance, dadTime, rufusAdvice, gearMult, gearContest,
@@ -1621,7 +1724,8 @@ const Art = (() => {
 
     // 망토
     if (st === 'armor') {
-      p.push(`<path d="M${cx - B.sh * 0.6},${B.neck + 10} Q${cx - B.sh * 1.2},${B.foot - 30} ${cx - B.sh * 0.9},${B.foot - 4} L${cx + B.sh * 0.9},${B.foot - 4} Q${cx + B.sh * 1.2},${B.foot - 30} ${cx + B.sh * 0.6},${B.neck + 10}Z" fill="#b53a4a"/>`);
+      const cape = of.cape || '#b53a4a';
+      p.push(`<path d="M${cx - B.sh * 0.6},${B.neck + 10} Q${cx - B.sh * 1.2},${B.foot - 30} ${cx - B.sh * 0.9},${B.foot - 4} L${cx + B.sh * 0.9},${B.foot - 4} Q${cx + B.sh * 1.2},${B.foot - 30} ${cx + B.sh * 0.6},${B.neck + 10}Z" fill="${cape}" stroke="${shade(cape, -0.25)}" stroke-width="2"/>`);
     }
 
     // 뒷머리
@@ -1670,6 +1774,7 @@ const Art = (() => {
       }
       p.push(`<path d="M${cx - sw},${top + 6} Q${cx},${top - 4} ${cx + sw},${top + 6} L${cx + fw},${hem} Q${cx},${hem + 8} ${cx - fw},${hem}Z" fill="${fill}" stroke="${colD}" stroke-width="2"/>`);
       if (st === 'robe') {
+        if (of.sparkle) for (let i = 0; i < 10; i++) p.push(`<circle cx="${cx - fw * 0.7 + (i * 41 % (fw * 1.4))}" cy="${B.waist + 18 + (i * 47 % (hem - B.waist - 30))}" r="2.6" fill="${of.sparkle}"/>`);
         p.push(`<path d="M${cx - fw + 3},${hem - 4} Q${cx},${hem + 6} ${cx + fw - 3},${hem - 4}" stroke="${acc}" stroke-width="7" fill="none"/>`);
         p.push(`<line x1="${cx}" y1="${top + 10}" x2="${cx}" y2="${hem}" stroke="${acc}" stroke-width="5"/>`);
         p.push(`<rect x="${cx - ww - 2}" y="${B.waist - 6}" width="${ww * 2 + 4}" height="9" rx="4" fill="${shade(col, -0.35)}"/>`);
@@ -2048,6 +2153,9 @@ const Scenes = (() => {
       `<path d="M0,170 Q425,150 850,170 L850,300 L0,300Z" fill="${['#9ad27a', '#7cc35f', '#e2b85a', '#eef2f6'][se]}"/><path d="M380,300 Q440,230 520,170 L560,170 Q500,230 480,300Z" fill="#e2c49a"/>` +
       '<g class="drift"><ellipse cx="200" cy="50" rx="50" ry="16" fill="#fff"/><ellipse cx="640" cy="40" rx="60" ry="18" fill="#fff"/></g>',
     ruins: () => sky('#2a1020', '#7a2a2a', 'gru') + '<path d="M0,210 L60,150 L90,170 L120,120 L170,170 L220,140 L260,190 L340,130 L380,170 L420,150 L470,200 L540,140 L600,180 L660,120 L720,170 L790,140 L850,190 L850,300 L0,300Z" fill="#1a0a10"/>' +
+      // 무너진 성당
+      '<g fill="#12060a"><path d="M330,240 L330,150 L380,110 L430,150 L430,240Z"/><path d="M430,240 L430,165 L470,160 L478,180 L500,172 L506,240Z"/><rect x="368" y="70" width="24" height="50"/><path d="M362,72 L380,52 L398,72Z"/></g>' +
+      '<path d="M380,40 L380,62 M372,48 L388,48" stroke="#12060a" stroke-width="5"/><path d="M366,150 Q380,132 394,150 L394,182 L366,182Z" fill="#ff8a3a" opacity=".55" class="glow"/>' +
       Array.from({ length: 24 }, (_, i) => `<circle cx="${rnd(i, 5) * W}" cy="${100 + rnd(i, 6) * 150}" r="${2 + rnd(i, 7) * 3}" fill="#ff8a3a" class="ember" style="animation-delay:${(rnd(i, 8) * 3).toFixed(2)}s"/>`).join(''),
     home: () => sky('#1d2557', '#5a4f9a', 'gh') + Array.from({ length: 40 }, (_, i) => `<circle cx="${rnd(i, 9) * W}" cy="${rnd(i, 10) * 150}" r="${1 + rnd(i, 11) * 1.8}" fill="#fff" class="tw" style="animation-delay:${(rnd(i, 12) * 3).toFixed(2)}s"/>`).join('') +
       '<path d="M0,230 Q300,170 850,220 L850,300 L0,300Z" fill="#2e4a3a"/><g transform="translate(470,120)"><rect width="160" height="110" fill="#e8d2b0"/><path d="M-20,0 L80,-60 L180,0Z" fill="#8e2a20"/><rect x="30" y="40" width="34" height="34" fill="#ffd96a" class="glow"/><rect x="100" y="50" width="34" height="60" fill="#6b4226"/></g>',
@@ -2119,8 +2227,8 @@ const Sound = (() => {
     try {
       ctx = new (window.AudioContext || window.webkitAudioContext)();
       const comp = ctx.createDynamicsCompressor();
-      comp.threshold.value = -10; comp.ratio.value = 4;
-      master = ctx.createGain(); master.gain.value = 1.0;
+      comp.threshold.value = -12; comp.ratio.value = 5; comp.knee.value = 6;
+      master = ctx.createGain(); master.gain.value = 1.5;   // 넉넉하게 큰 편
       master.connect(comp); comp.connect(ctx.destination);
       sfxGain = ctx.createGain(); sfxGain.gain.value = sfxVol; sfxGain.connect(master);
       bgmGain = ctx.createGain(); bgmGain.gain.value = bgmVol * 0.55; bgmGain.connect(master);
@@ -2152,7 +2260,7 @@ const Sound = (() => {
     click:  () => tone(N(84), ctx.currentTime, 0.07, 'square', 0.18),
     select: () => seq([76, 83], 0.06, 'triangle', 0.45),
     cancel: () => seq([72, 65], 0.06, 'triangle', 0.4),
-    tick:   () => tone(N(91), ctx.currentTime, 0.05, 'sine', 0.22),
+    tick:   () => tone(N(84), ctx.currentTime, 0.05, 'triangle', 0.16),
     coin:   () => seq([88, 95], 0.07, 'square', 0.25),
     good:   () => seq([72, 76, 79], 0.07, 'triangle', 0.5),
     great:  () => seq([72, 76, 79, 84, 88], 0.06, 'triangle', 0.55),
@@ -2200,6 +2308,7 @@ const Sound = (() => {
     bgmTimer = setInterval(() => {
       if (!ctx) return;
       const song = SONGS[bgmSong];
+      if (next < ctx.currentTime - 0.05) next = ctx.currentTime + 0.05;  // 탭이 쉬는 동안 밀린 음은 건너뜀
       while (next < ctx.currentTime + 0.4) {
         const i = bgmStep % song.mel.length;
         if (song.mel[i]) tone(N(song.mel[i] + 12), next, song.tempo * 2.2, 'sine', 0.22, bgmGain);
@@ -2231,6 +2340,11 @@ const Sound = (() => {
   meta.settings = Object.assign({}, DEFAULT_META.settings, meta.settings || {});
   meta.titles = meta.titles || {};
   meta.keptAcc = meta.keptAcc || [];
+  // 예전 판에만 있던 엔딩·칭호·옷은 정리
+  for (const k of Object.keys(meta.endings || {})) if (!ENDING[k]) delete meta.endings[k];
+  for (const k of Object.keys(meta.titles)) if (!TITLE[k]) delete meta.titles[k];
+  meta.keptOutfits = (meta.keptOutfits || []).filter(id => OUTFIT[id] && !OUTFIT[id].hidden);
+  meta.keptAcc = meta.keptAcc.filter(id => ACC_ITEM[id]);
   const saveMeta = () => store.set(META_KEY, meta);
 
   let S = null;            // 진행 중인 게임
@@ -2417,7 +2531,7 @@ const Sound = (() => {
     document.querySelectorAll('#styleChips .chip').forEach(s => s.classList.toggle('on', s.dataset.style === setupStyle));
   }
   function startNew() {
-    const name = $('nameInput').value.trim().replace(/\s+/g, ' ').slice(0, 6);
+    const name = $('nameInput').value.replace(/[<>&"'`\\$]/g, '').trim().replace(/\s+/g, ' ').slice(0, 6);
     if (!name) { toast('딸 이름을 지어 줘!'); Sound.play('cancel'); $('nameInput').focus(); return; }
     $('nameInput').blur();
     S = Logic.newGame(name, setupHair, meta, setupStyle);
@@ -2462,7 +2576,7 @@ const Sound = (() => {
     }
     Sound.setSong('home');
     enterMain();
-    await tutorial();
+    if (meta.runs <= 1) await tutorial();
     beginMonth();
   }
 
@@ -2498,7 +2612,7 @@ const Sound = (() => {
       const v = Math.floor(S.st[s.k]);
       const h = hint && hint[s.k];
       const arrow = h ? (h > 0 ? '<span class="arrow up">▲</span>' : '<span class="arrow down">▼</span>') : '<span class="arrow"></span>';
-      return `<div class="srow"><b>${s.n}</b>${arrow}<div class="bar"><i style="width:${Math.min(100, v / 5)}%;background:${s.col}"></i></div><span>${v}</span></div>`;
+      return `<div class="srow"><b>${s.n}</b>${arrow}<div class="bar"><i style="width:${Math.min(100, v / 8)}%;background:${s.col}"></i></div><span>${v}</span></div>`;
     }).join('');
   }
   function gainText(a) {
@@ -2514,9 +2628,9 @@ const Sound = (() => {
       const st = Logic.actState(S, a, planned);
       let money;
       if (a.type === 'job') money = `<span class="money up">+${Logic.payOf(S, a)}G</span>`;
-      else if (a.cost) money = `<span class="money down">-${a.cost}G</span>`;
+      else if (a.cost) money = `<span class="money down">-${Logic.costOf(S, a)}G</span>`;
       else money = `<span class="money">무료</span>`;
-      const lvn = a.type === 'lesson' ? Logic.lessonLv(S, a.id) : 0;
+      const lvn = a.type === 'lesson' || a.type === 'job' ? Logic.lessonLv(S, a.id) : 0;
       const lv = lvn ? `<span class="lv">${'★'.repeat(lvn)}${'☆'.repeat(5 - lvn)}</span>` : '';
       const boost = Logic.gearMult(S, a.id) > 1 ? '<span class="boost">UP</span>' : '';
       const sub = st.ok ? gainText(a) : `🔒 ${st.why}`;
@@ -2531,7 +2645,7 @@ const Sound = (() => {
       el.innerHTML = `<span class="when">${SLOT_NAMES[i]}</span>` + (id ? `<span class="ic">${ACT[id].icon}</span><span class="nm">${ACT[id].name}</span>` : `<span class="ic" style="opacity:.25">＋</span><span class="nm">비어 있음</span>`);
     });
     let out = 0, inc = 0;
-    for (const id of S.sched) if (id) { const a = ACT[id]; if (a.type === 'job') inc += Logic.payOf(S, a); else out += a.cost || 0; }
+    for (const id of S.sched) if (id) { const a = ACT[id]; if (a.type === 'job') inc += Logic.payOf(S, a); else out += Logic.costOf(S, a); }
     $('schedSum').innerHTML = `지출 <b class="down">-${out}G</b> · 수입 <b class="up">+${inc}G</b>`;
     $('startBtn').disabled = firstEmpty !== -1;
     $('repeatBtn').disabled = !canRepeat();
@@ -2541,7 +2655,7 @@ const Sound = (() => {
     let cost = 0;
     for (const id of S.lastSched) {
       if (!Logic.actState(S, ACT[id], cost).ok) return false;
-      cost += ACT[id].cost || 0;
+      cost += Logic.costOf(S, ACT[id]);
     }
     return true;
   }
@@ -2643,12 +2757,12 @@ const Sound = (() => {
     $('rScene').innerHTML = Scenes.activity(a, season(), girlOpts(workExpr), npcSvg);
     renderGirl(workExpr);
     const days = $('rDays').children;
-    await sleep(350);
+    await sleep(300);
     for (let d = 0; d < 10; d++) {
       days[d].classList.add('on');
       Sound.play('tick');
-      if (d === 3) $('rLine').textContent = res.line;
-      await sleep(380);
+      if (d === 2) $('rLine').textContent = res.line;
+      await sleep(300);
     }
     const kindTxt = { great: '대성공!', ok: '성공!', fail: '실패…', sick: '아파서 쉬었어…' }[res.kind];
     const ch = res.changes.slice();
@@ -2663,17 +2777,21 @@ const Sound = (() => {
     renderHud();
     // 선생님·주인 한마디
     let said = false;
-    if (res.lvUp && a.npc && TEACH_LINES[a.npc]) {
+    if (res.lvUp && a.type === 'lesson' && TEACH_LINES[a.npc]) {
       npcSay(a.npc, F(TEACH_LINES[a.npc][res.lvUp - 2]));
       setTimeout(() => Sound.play('lvup'), 400);
-      toast(`${a.name} 수업이 ${res.lvUp}단계가 됐어! 효과가 더 커져`);
+      toast(`${a.name} 수업이 ${res.lvUp}단계가 됐어! 효과가 더 커져 (수업료도 조금 올라)`);
       said = true;
-    } else if (a.type === 'job' && BOSS_LINES[a.npc]) {
-      if (S.cnt[id] === 12) { npcSay(a.npc, F(BOSS_LINES[a.npc].loyal)); said = true; }
-      else if (res.kind === 'great') { npcSay(a.npc, F(pickOne(BOSS_LINES[a.npc].great))); said = true; }
+    } else if (res.lvUp && a.type === 'job' && BOSS_LINES[a.npc]) {
+      npcSay(a.npc, F(res.lvUp >= 3 ? BOSS_LINES[a.npc].loyal : pickOne(BOSS_LINES[a.npc].great)));
+      setTimeout(() => Sound.play('lvup'), 400);
+      toast(`${a.name} 숙련도가 ${res.lvUp}단계가 됐어! 효과와 보수가 커져`);
+      said = true;
+    } else if (a.type === 'job' && BOSS_LINES[a.npc] && res.kind === 'great') {
+      npcSay(a.npc, F(pickOne(BOSS_LINES[a.npc].great))); said = true;
     }
     skip = false;
-    await sleep(said ? 2600 : 1800);
+    await sleep(said ? 2400 : 1500);
   }
 
   async function showSummary(end) {
@@ -2683,7 +2801,7 @@ const Sound = (() => {
     box.classList.add('on');
     Sound.play('coin');
     renderAll();
-    await sleep(1500);
+    await sleep(1200);
     box.classList.remove('on');
   }
 
@@ -2713,7 +2831,8 @@ const Sound = (() => {
     await choose(`<h3><span class="ic">🌟</span>${F('{n}{과} 함께하는 8년')}</h3>
       <p>매달 <b>상순·중순·하순</b> 세 칸에 할 일을 넣어 줘.<br>오른쪽 목록을 <b>클릭</b>하면 빈칸에 차례로 들어가고, 칸을 클릭하면 빠져.</p>
       <p>📚 수업은 돈이 들고 능력치가 올라. 🥐 아르바이트는 돈을 벌어.<br>😫 스트레스가 쌓이면 아프거나 집을 나갈 수도 있으니 🛏️ 휴식·🧳 여행도 챙겨 줘.</p>
-      <p>💕 한 달에 한 번 딸과 시간을 보낼 수 있고, 💬 루퍼스에게 조언을 들을 수 있어.<br>🍂 해마다 10월엔 가을 축제, 🎂 열여덟 살 생일에 엔딩이 정해져. (스페이스바 = 클릭)</p>
+      <p>⭐ 수업과 일은 많이 할수록 단계가 올라서 효과가 커져.<br>💕 한 달에 한 번 딸과 시간을 보낼 수 있고, 💬 루퍼스에게 조언을 들을 수 있어.</p>
+      <p>🍂 해마다 10월엔 가을 축제, 🎂 열여덟 살 생일에 엔딩이 정해져.<br>📖 도감에서 엔딩 조건을 확인할 수 있어. (스페이스바 = 클릭)</p>
       <div class="btns"><button class="btn pri jua" data-v="ok">알겠어!</button></div>`);
     Sound.play('select');
   }
@@ -2748,6 +2867,7 @@ const Sound = (() => {
     const head = { icon: ev.icon, title: ev.title };
     const lines = (ev.lines || []).map(l => [l[0], F(l[1]), l[2]]);
     const choices = ev.choices.map(c => ({ t: F(c.t), off: c.need && S.gold < c.need }));
+    if (choices.every(c => c.off)) choices[choices.length - 1].off = false;
     const i = await playLines(head, lines, choices);
     const r = Logic.chooseEvent(S, ev, i);
     Sound.play('select');
@@ -2946,6 +3066,24 @@ const Sound = (() => {
     renderAll();
   }
 
+  // 엔딩 조건을 사람이 읽는 말로 (지금 딸의 수치와 함께)
+  const CNT_NAME = { art: '미술 수업', music: '음악 수업', church: '성당 일', bakery: '빵집 일', tavern: '주점 일', farm: '농장 일', travel: '여행' };
+  const FLAG_NAME = { liana: '리아나 공주와의 이야기', locket: '은 목걸이의 비밀', orphan: '고아원과의 인연', dark: '주점의 수상한 제안', forbidden: '금지된 마법서', dadtime: '딸과의 시간' };
+  function reqText(req) {
+    const out = [];
+    const mark = (ok, txt) => out.push(`<span class="${S ? (ok ? 'rq ok' : 'rq no') : 'rq'}">${txt}${S ? (ok ? ' ✔' : '') : ''}</span>`);
+    for (const k in req.st || {}) mark(S && S.st[k] >= req.st[k], `${STAT_NAME[k]} ${req.st[k]}${S ? ` <small>(${Math.floor(S.st[k])})</small>` : ''}`);
+    for (const k in req.max || {}) mark(S && S.st[k] <= req.max[k], `${STAT_NAME[k]} ${req.max[k]} 이하${S ? ` <small>(${Math.floor(S.st[k])})</small>` : ''}`);
+    for (const k in req.cnt || {}) mark(S && (S.cnt[k] || 0) >= req.cnt[k], `${CNT_NAME[k] || k} ${req.cnt[k]}번${S ? ` <small>(${S.cnt[k] || 0})</small>` : ''}`);
+    for (const k in req.wins || {}) mark(S && S.wins[k] >= req.wins[k], `${CONTEST[k].name} 우승 ${req.wins[k]}번${S ? ` <small>(${S.wins[k]})</small>` : ''}`);
+    for (const k in req.flags || {}) mark(S && (S.flags[k] || 0) >= req.flags[k], k === 'dadtime' ? `딸과의 시간 ${req.flags[k]}번${S ? ` <small>(${S.flags.dadtime || 0})</small>` : ''}` : FLAG_NAME[k] || k);
+    if (req.gold) mark(S && S.gold >= req.gold, `돈 ${req.gold}G${S ? ` <small>(${Math.floor(S.gold)})</small>` : ''}`);
+    if (req.fame) mark(S && S.fame >= req.fame, `평판 ${req.fame}${S ? ` <small>(${Math.floor(S.fame)})</small>` : ''}`);
+    if (req.aff) mark(S && S.aff >= req.aff, `아빠와의 사이 ${req.aff}${S ? ` <small>(${Math.round(S.aff)})</small>` : ''}`);
+    if (req.runaways) mark(S && S.runaways >= req.runaways, `가출 ${req.runaways}번`);
+    return out.join(' · ');
+  }
+
   // ---------- 도감 ----------
   async function openCodex() {
     if (busy) return;
@@ -2953,9 +3091,12 @@ const Sound = (() => {
     const m = () => $('modal');
     const endInfo = e => {
       const got = meta.endings[e.id];
+      const open = got || !e.hidden;
       const pg = S && !e.hidden && e.id !== 'villager' ? Math.round(Logic.reqProgress(S, e.req) * 100) : null;
-      return `<b class="jua" style="font-size:26px">${e.icon} ${got || !e.hidden ? e.name : '??? (숨겨진 엔딩)'}</b> ${got ? `<span class="up">✔ 달성 ${got.count}번</span>` : '<span style="color:#8a7c99">미달성</span>'}
-        ${pg !== null ? `<span style="float:right;color:#7a6cf0">지금 ${S.name}: ${pg}%</span>` : ''}<br>힌트: ${e.hint}`;
+      const rq = open && e.id !== 'villager' ? `<div class="rqs">조건: ${reqText(e.req)}</div>` : '';
+      const pic = got ? `<div class="cpic">${Art.girl({ stage: 2, outfit: e.outfit, expr: 'happy', hair: hairCol(got.hair || 'brown'), hairStyle: got.style || 'long', acc: e.acc })}</div>` : '';
+      return `${pic}<b class="jua" style="font-size:26px">${e.icon} ${open ? e.name : '??? (숨겨진 엔딩)'}</b> ${got ? `<span class="up">✔ 달성 ${got.count}번${got.name ? ` · ${got.name}` : ''}</span>` : '<span style="color:#8a7c99">미달성</span>'}
+        ${pg !== null ? `<span style="float:right;color:#7a6cf0">지금 ${S.name}: ${pg}%</span>` : ''}<br>힌트: ${e.hint}${rq}`;
     };
     const draw = () => {
       const seen = Object.keys(meta.endings).length;
@@ -3025,7 +3166,12 @@ const Sound = (() => {
   async function startEnding() {
     const e = Logic.decideEnding(S);
     const isNew = !meta.endings[e.id];
-    meta.endings[e.id] = { count: (meta.endings[e.id] ? meta.endings[e.id].count : 0) + 1, name: S.name };
+    meta.endings[e.id] = { count: (meta.endings[e.id] ? meta.endings[e.id].count : 0) + 1, name: S.name, hair: S.hair, style: S.hairStyle };
+    // 다음 판 목표용: 조건은 채웠지만 다른 엔딩이 골라진 길 / 아깝게 놓친 길
+    const others = ENDINGS.filter(x => x !== e && !x.hidden && x.id !== 'villager' && x.tier !== 'D');
+    const alsoMet = others.filter(x => Logic.reqMet(S, x.req)).slice(0, 3);
+    const missed = others.filter(x => !Logic.reqMet(S, x.req) && !meta.endings[x.id])
+      .map(x => ({ x, p: Logic.reqProgress(S, x.req) })).filter(o => o.p >= 0.6).sort((a, b) => b.p - a.p).slice(0, 2);
     const kept = new Set(meta.keptOutfits);
     S.owned.forEach(o => { if (o !== 'basic' && OUTFIT[o] && !OUTFIT[o].hidden) kept.add(o); });
     meta.keptOutfits = Array.from(kept);
@@ -3057,6 +3203,8 @@ const Sound = (() => {
       <h2 class="jua">${e.icon} ${e.name}</h2>
       <p>${F(e.text)}</p>
       <p class="epi" id="eEpi">${F(e.epi)}</p>
+      ${alsoMet.length ? `<div class="missed">이 길도 열려 있었어: ${alsoMet.map(x => `「${x.icon} ${x.name}」`).join(' ')}</div>` : ''}
+      ${missed.length ? `<div class="missed">아깝게 놓친 길: ${missed.map(o => `「${o.x.icon} ${o.x.name}」 ${Math.round(o.p * 100)}%`).join(' ')}</div>` : ''}
       <div class="final">${STATS.map(s => `<div>${s.n} <b>${Math.floor(t[s.k])}</b></div>`).join('')}
         <div>돈 <b>${Math.floor(S.gold)}G</b></div><div>평판 <b>${Math.floor(S.fame)}</b></div><div>우승 <b>${S.wins.martial + S.wins.beauty + S.wins.cook + S.wins.magic}회</b></div><div>칭호 <b>${S.titles.length}개</b></div><div>사이 <b>${hearts(S.aff)}</b></div></div>
       <div class="btns">

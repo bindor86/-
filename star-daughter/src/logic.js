@@ -6,8 +6,11 @@ const Logic = (() => {
   const pick = arr => arr[Math.floor(rng() * arr.length)];
 
   const TOTAL_MONTHS = 96;
-  const STIPEND = 70;
-  const GAIN = 0.5;   // 수업·일 능력치 상승 배율
+  const STIPEND = 60;   // 10살 기준, 해마다 +10
+  const stipendOf = s => STIPEND + (age(s) - 10) * 10;
+  const GAIN = 0.4;   // 수업·일 능력치 상승 배율
+  const AFF_SOFT = 150;   // 사이가 높을수록 덜 오름
+  const AFF_DRIFT = 1.5;  // 사이가 좋을 때(50 넘게) 딸과 시간을 안 보낸 달에 식는 만큼
   const age = s => 10 + Math.floor(s.m / 12);
   const calMonth = s => (2 + s.m) % 12;           // 0 = 1월
   const yearNo = s => Math.floor(s.m / 12) + 1;   // n년째
@@ -25,7 +28,7 @@ const Logic = (() => {
   function fmt(text, s) {
     const n = s.name;
     const b = hasBatchim(n);
-    return text.replace(/\{n\}\{(이라|은|이|을|과|아|도)\}/g, (_, j) => n + JOSA[j][b ? 0 : 1]).replace(/\{n\}/g, n);
+    return text.replace(/\{n\}\{(이라|은|이|을|과|아|도)\}/g, (_, j) => n + JOSA[j][b ? 0 : 1]).replace(/\{n\}/g, () => n);
   }
 
   // ----- 새 게임 -----
@@ -52,26 +55,28 @@ const Logic = (() => {
     return Math.min(1000, n * 50);
   }
 
-  // ----- 수업 단계 -----
+  // ----- 수업 단계 · 일 숙련도 (같은 기준) -----
   function lessonLv(s, id) {
     const c = s.cnt[id] || 0;
     let lv = 1;
     for (let i = 0; i < LESSON_LV.length; i++) if (c >= LESSON_LV[i]) lv = i + 1;
     return lv;
   }
-  const lvMult = lv => 1 + (lv - 1) * 0.15;
+  const lvMult = lv => 1 + (lv - 1) * 0.12;
+  const costOf = (s, a) => Math.round((a.cost || 0) * (a.type === 'lesson' ? 1 + (lessonLv(s, a.id) - 1) * 0.15 : 1));
 
-  function payOf(s, a) { return Math.round(a.pay * (1 + (age(s) - 10) * 0.12)); }
+  const jobPayMult = lv => 1 + (lv - 1) * 0.08;
+  function payOf(s, a) { return Math.round(a.pay * (1 + (age(s) - 10) * 0.12) * jobPayMult(lessonLv(s, a.id))); }
 
   function actState(s, a, plannedCost) {
     if (a.minAge && age(s) < a.minAge) return { ok: false, why: `${a.minAge}살부터` };
     if (a.req) for (const k in a.req) if (s.st[k] < a.req[k]) return { ok: false, why: `${STAT_NAME[k]} ${a.req[k]} 필요` };
-    const cost = a.cost || 0;
+    const cost = costOf(s, a);
     if (cost > 0 && s.gold - (plannedCost || 0) < cost) return { ok: false, why: '돈이 모자라' };
     return { ok: true };
   }
   function schedCost(s) {
-    return s.sched.reduce((t, id) => t + (id ? (ACT[id].cost || 0) : 0), 0);
+    return s.sched.reduce((t, id) => t + (id ? costOf(s, ACT[id]) : 0), 0);
   }
 
   // ----- 옷 · 액세서리 -----
@@ -84,13 +89,24 @@ const Logic = (() => {
     if (k === 'gold') { s.gold = Math.max(0, s.gold + d); return; }
     if (k === 'stress') { s.stress = clamp(s.stress + d, 0, 100); return; }
     if (k === 'fame') { s.fame = clamp(s.fame + d, 0, 999); return; }
-    if (k === 'aff') { s.aff = clamp(s.aff + d, 0, 100); return; }
+    if (k === 'aff') { s.aff = clamp(s.aff + (d > 0 ? d * (1 - s.aff / AFF_SOFT) : d), 0, 100); return; }
     if (k in s.st) { s.st[k] = clamp(s.st[k] + d, 0, STAT_MAX); return; }
     s.flags[k] = (s.flags[k] || 0) + d;  // 플래그 (friend, prince 등)
   }
+  // 실제로 변한 만큼을 돌려줌 (상한·하한, 사이 완만함 반영)
+  function valueOf(s, k) {
+    if (k === 'gold' || k === 'stress' || k === 'fame' || k === 'aff') return s[k];
+    if (k in s.st) return s.st[k];
+    return null;
+  }
   function applyFx(s, fx) {
     const out = [];
-    for (const k in fx) { addStat(s, k, fx[k]); out.push({ k, d: fx[k] }); }
+    for (const k in fx) {
+      const before = valueOf(s, k);
+      addStat(s, k, fx[k]);
+      const after = valueOf(s, k);
+      out.push({ k, d: before === null ? fx[k] : Math.round(after - before) });
+    }
     return out;
   }
 
@@ -126,24 +142,25 @@ const Logic = (() => {
     const mult = { great: 1.5, ok: 1, fail: 0.35 }[res.kind];
 
     // 효과 배율: 수업 단계 · 옷
-    const before = a.type === 'lesson' ? lessonLv(s, id) : 0;
-    let m = a.type === 'lesson' ? lvMult(before) : 1;
+    const leveled = a.type === 'lesson' || a.type === 'job';
+    const before = leveled ? lessonLv(s, id) : 0;
+    let m = leveled ? lvMult(before) : 1;
     m *= gearMult(s, id);
 
     for (const k in a.gain) {
       const base = a.gain[k];
       let d;
       if (base > 0) d = Math.max(res.kind === 'fail' ? 0 : 1, Math.round(base * GAIN * m * mult * (0.8 + rng() * 0.4)));
-      else d = Math.min(-1, Math.round(base * GAIN));
+      else { const x = -base * GAIN; d = -(Math.floor(x) + (rng() < x - Math.floor(x) ? 1 : 0)); }  // 평균만큼만 깎임
       if (d !== 0) { addStat(s, k, d); res.changes.push({ k, d }); }
     }
 
-    // 돈
+    // 돈 (일 숙련도 반영은 payOf 안에서)
     if (a.type === 'job') {
       const g = Math.round(payOf(s, a) * (res.kind === 'great' ? 1.5 : res.kind === 'fail' ? 0.4 : 1));
       s.gold += g; res.gold = g;
     } else if (a.cost) {
-      const c = Math.min(s.gold, a.cost);
+      const c = Math.min(s.gold, costOf(s, a));
       s.gold -= c; res.gold = -c;
     }
 
@@ -157,15 +174,16 @@ const Logic = (() => {
     if (a.type === 'job' && res.kind !== 'fail' && !a.fame) addStat(s, 'fame', 0.5);
 
     s.cnt[id] = (s.cnt[id] || 0) + 1;
-    if (a.type === 'lesson' && lessonLv(s, id) > before) res.lvUp = lessonLv(s, id);
+    if (leveled && lessonLv(s, id) > before) res.lvUp = lessonLv(s, id);
     return res;
   }
 
   // ----- 달 마감 -----
   function monthEnd(s) {
-    const out = { stipend: STIPEND, bonus: [], runaway: false };
-    s.gold += STIPEND;
+    const out = { stipend: stipendOf(s), bonus: [], runaway: false };
+    s.gold += out.stipend;
     for (const g of gear(s)) if (g.bonus) out.bonus = out.bonus.concat(applyFx(s, g.bonus));
+    if (s.talkedM !== s.m && s.aff > 50) addStat(s, 'aff', -Math.min(AFF_DRIFT, s.aff - 50));
     s.fame = Math.round(s.fame * 10) / 10;
     // 아빠와 사이가 좋으면 집을 나가지 않아
     if (s.stress >= 100 && s.st.mor < 200 && s.aff < 60 && rng() < 0.5) { s.runaway = true; out.runaway = true; }
@@ -184,7 +202,7 @@ const Logic = (() => {
     addStat(s, 'mor', -10);
     addStat(s, 'fame', -25);
     addStat(s, 'aff', -10);
-    s.gold += STIPEND;
+    s.gold += stipendOf(s);
     s.m++;
     return { lost };
   }
@@ -203,7 +221,7 @@ const Logic = (() => {
     const pool = EVENTS.filter(e => e.weight !== 99 && eventOK(s, e) && !(e.repeat && s.seen[e.id] && rng() < 0.6));
     if (!pool.length) return null;
     // 인물 이야기는 더 자주 나오게
-    const w = e => /^(haru|liana|bianca|locket|orphan)\d/.test(e.id) ? 5 : e.month !== undefined ? 3 : 1;
+    const w = e => /^(haru|liana|bianca|locket|orphan)\d/.test(e.id) ? 6 : e.key ? 4 : e.month !== undefined ? 3 : 1;
     let total = pool.reduce((t, e) => t + w(e), 0), r = rng() * total;
     for (const e of pool) { r -= w(e); if (r <= 0) return e; }
     return pool[pool.length - 1];
@@ -276,6 +294,7 @@ const Logic = (() => {
     if (req.flags) for (const k in req.flags) if ((s.flags[k] || 0) < req.flags[k]) return false;
     if (req.gold && s.gold < req.gold) return false;
     if (req.aff && s.aff < req.aff) return false;
+    if (req.fame && s.fame < req.fame) return false;
     if (req.runaways && s.runaways < req.runaways) return false;
     return true;
   }
@@ -289,6 +308,7 @@ const Logic = (() => {
     if (req.flags) for (const k in req.flags) parts.push(Math.min(1, (s.flags[k] || 0) / req.flags[k]));
     if (req.gold) parts.push(Math.min(1, s.gold / req.gold));
     if (req.aff) parts.push(Math.min(1, s.aff / req.aff));
+    if (req.fame) parts.push(Math.min(1, s.fame / req.fame));
     if (req.runaways) parts.push(Math.min(1, s.runaways / req.runaways));
     if (!parts.length) return 0;
     // '도덕이 낮아야' 같은 상한 조건은 다른 조건이 반쯤 찼을 때만 진척으로 쳐
@@ -299,8 +319,43 @@ const Logic = (() => {
     }
     return avg;
   }
+  // 같은 등급 안에서 고를 때: 조건마다 '얼마나 넘겼나(배수)'를 보고 가장 아슬아슬한 조건으로 비교.
+  // 이야기·우승 조건은 채웠으면 넉넉한 것으로 침. 같으면 ENDINGS 앞쪽(더 어려운 쪽)이 이김
+  const FIT_CAP = 3;
+  function reqFit(s, req) {
+    let low = FIT_CAP;
+    const r = (v, t) => { low = Math.min(low, v / t); };
+    if (req.st) for (const k in req.st) r(s.st[k], req.st[k]);
+    if (req.max) for (const k in req.max) low = Math.min(low, 1 + Math.max(0, req.max[k] - s.st[k]) / 100);
+    if (req.cnt) for (const k in req.cnt) r(s.cnt[k] || 0, req.cnt[k]);
+    if (req.gold) r(s.gold, req.gold);
+    if (req.aff) r(s.aff, req.aff);
+    if (req.fame) r(s.fame, req.fame);
+    return low;
+  }
+  // X의 조건이 Y의 조건을 모두 포함하고 더 높으면 X가 Y를 '덮음' (예: 치유사 ⊃ 교사)
+  function covers(X, Y) {
+    let more = false;
+    const groups = ['st', 'cnt', 'wins', 'flags'];
+    for (const g of groups) for (const k in (Y[g] || {})) {
+      if (!X[g] || X[g][k] === undefined || X[g][k] < Y[g][k]) return false;
+      if (X[g][k] > Y[g][k]) more = true;
+    }
+    for (const k of ['gold', 'fame', 'aff']) if (Y[k] !== undefined) { if (X[k] === undefined || X[k] < Y[k]) return false; if (X[k] > Y[k]) more = true; }
+    if (Y.max) return false;
+    for (const g of groups) for (const k in (X[g] || {})) if (!Y[g] || Y[g][k] === undefined) more = true;
+    for (const k of ['gold', 'fame', 'aff']) if (X[k] !== undefined && Y[k] === undefined) more = true;
+    return more;
+  }
+  const TIER_ORDER = ['S', 'H', 'A', 'W', 'D', 'Z'];
   function decideEnding(s) {
-    for (const e of ENDINGS) if (reqMet(s, e.req)) return e;
+    for (const t of TIER_ORDER) {
+      const met = ENDINGS.filter(e => e.tier === t && reqMet(s, e.req));
+      const cand = met.filter(y => !met.some(x => x !== y && covers(x.req, y.req)));
+      let best = null, bv = -1;
+      for (const e of cand) { const v = reqFit(s, e.req); if (v > bv) { bv = v; best = e; } }
+      if (best) return best;
+    }
     return ENDING.villager;
   }
   function nearestEnding(s) {
@@ -324,10 +379,10 @@ const Logic = (() => {
   // ----- 딸과의 시간 (한 달에 한 번) -----
   const DAD_ACTS = [
     { id: 'talk', name: '대화하기', icon: '💬', desc: '사이 ↑ 스트레스 ↓', fx: { aff: 4, stress: -8 } },
-    { id: 'walk', name: '함께 산책', icon: '🌳', desc: '사이 ↑ 체력·감성 ↑', fx: { aff: 3, stress: -6, hp: 2, sen: 2 } },
+    { id: 'walk', name: '함께 산책', icon: '🌳', desc: '사이 ↑ 체력·감성 조금 ↑', fx: { aff: 3, stress: -6, hp: 1, sen: 1 } },
     { id: 'money', name: '용돈 주기', icon: '🪙', desc: '스트레스 ↓↓ 돈이 들어', fx: { stress: -15, aff: 2, mor: -1 } },
-    { id: 'praise', name: '칭찬하기', icon: '👏', desc: '사이 ↑ 매력 ↑', fx: { aff: 5, stress: -4, cha: 2 } },
-    { id: 'scold', name: '꾸짖기', icon: '☝️', desc: '도덕 ↑ 스트레스 ↑ 사이 ↓', fx: { mor: 8, stress: 10, aff: -4 } },
+    { id: 'praise', name: '칭찬하기', icon: '👏', desc: '사이 ↑ 매력 조금 ↑', fx: { aff: 4, stress: -4, cha: 1 } },
+    { id: 'scold', name: '꾸짖기', icon: '☝️', desc: '도덕 ↑ 스트레스 ↑ 사이 ↓', fx: { mor: 4, stress: 10, aff: -5 } },
   ];
   const allowance = s => 20 + age(s) * 5;
   function dadTime(s, id) {
@@ -348,6 +403,7 @@ const Logic = (() => {
     else if (id === 'praise') lines = [['dad', pick(['요즘 정말 열심히 하는구나. 대견하다.', '네가 자랑스럽다.', '오늘도 수고했다.'])], ['me', pick(['헤헤… 갑자기 왜 그래.', '…더 열심히 할게!', '아빠가 칭찬하니까 이상해. 좋은 쪽으로.']), 'happy']];
     else lines = [['dad', pick(['요즘 행동이 좀 지나치구나.', '해야 할 일을 소홀히 하면 안 된다.', '말투가 많이 거칠어졌어.'])], ['me', pick(['…알았어.', '잔소리…', '…미안해.']), 'sulky']];
     s.talkedM = s.m;
+    s.flags.dadtime = (s.flags.dadtime || 0) + 1;
     return { lines, changes: applyFx(s, fx) };
   }
 
@@ -392,7 +448,7 @@ const Logic = (() => {
 
   return {
     setRng, TOTAL_MONTHS, STIPEND, josa, age, calMonth, yearNo, isBirthday, isFestival, fmt, hasBatchim,
-    newGame, lessonLv, lvMult, payOf, actState, schedCost, applyFx, runSlot, monthEnd, resolveRunaway,
+    newGame, lessonLv, lvMult, payOf, costOf, AFF_SOFT, reqFit, covers, actState, schedCost, applyFx, runSlot, monthEnd, resolveRunaway,
     pickEvent, chooseEvent, eventOK, birthdayGifts, contestPower, rivalBase, runContest,
     reqMet, reqProgress, decideEnding, nearestEnding, mood, stage, addStat,
     checkTitles, DAD_ACTS, allowance, dadTime, rufusAdvice, gearMult, gearContest,

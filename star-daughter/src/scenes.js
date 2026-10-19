@@ -52,6 +52,9 @@ const Scenes = (() => {
       `<path d="M0,170 Q425,150 850,170 L850,300 L0,300Z" fill="${['#9ad27a', '#7cc35f', '#e2b85a', '#eef2f6'][se]}"/><path d="M380,300 Q440,230 520,170 L560,170 Q500,230 480,300Z" fill="#e2c49a"/>` +
       '<g class="drift"><ellipse cx="200" cy="50" rx="50" ry="16" fill="#fff"/><ellipse cx="640" cy="40" rx="60" ry="18" fill="#fff"/></g>',
     ruins: () => sky('#2a1020', '#7a2a2a', 'gru') + '<path d="M0,210 L60,150 L90,170 L120,120 L170,170 L220,140 L260,190 L340,130 L380,170 L420,150 L470,200 L540,140 L600,180 L660,120 L720,170 L790,140 L850,190 L850,300 L0,300Z" fill="#1a0a10"/>' +
+      // 무너진 성당
+      '<g fill="#12060a"><path d="M330,240 L330,150 L380,110 L430,150 L430,240Z"/><path d="M430,240 L430,165 L470,160 L478,180 L500,172 L506,240Z"/><rect x="368" y="70" width="24" height="50"/><path d="M362,72 L380,52 L398,72Z"/></g>' +
+      '<path d="M380,40 L380,62 M372,48 L388,48" stroke="#12060a" stroke-width="5"/><path d="M366,150 Q380,132 394,150 L394,182 L366,182Z" fill="#ff8a3a" opacity=".55" class="glow"/>' +
       Array.from({ length: 24 }, (_, i) => `<circle cx="${rnd(i, 5) * W}" cy="${100 + rnd(i, 6) * 150}" r="${2 + rnd(i, 7) * 3}" fill="#ff8a3a" class="ember" style="animation-delay:${(rnd(i, 8) * 3).toFixed(2)}s"/>`).join(''),
     home: () => sky('#1d2557', '#5a4f9a', 'gh') + Array.from({ length: 40 }, (_, i) => `<circle cx="${rnd(i, 9) * W}" cy="${rnd(i, 10) * 150}" r="${1 + rnd(i, 11) * 1.8}" fill="#fff" class="tw" style="animation-delay:${(rnd(i, 12) * 3).toFixed(2)}s"/>`).join('') +
       '<path d="M0,230 Q300,170 850,220 L850,300 L0,300Z" fill="#2e4a3a"/><g transform="translate(470,120)"><rect width="160" height="110" fill="#e8d2b0"/><path d="M-20,0 L80,-60 L180,0Z" fill="#8e2a20"/><rect x="30" y="40" width="34" height="34" fill="#ffd96a" class="glow"/><rect x="100" y="50" width="34" height="60" fill="#6b4226"/></g>',

@@ -131,7 +131,7 @@ button { font-family: inherit; color: inherit; }
 #run .head .steps i.done { background: var(--good); }
 #run .scene { position: absolute; left: 0; right: 0; top: 70px; height: 300px; overflow: hidden; border-bottom: 3px solid var(--line); }
 #run .scene > svg { width: 100%; height: 100%; display: block; }
-.nbub { position: absolute; right: 200px; top: 96px; max-width: 360px; background: #fff; border: 3px solid #d8c09c; border-radius: 16px; padding: 8px 14px; font-size: 20px; line-height: 1.35; opacity: 0; transform: translateY(8px); transition: all .3s; pointer-events: none; }
+.nbub { position: absolute; right: 16px; top: 80px; max-width: 330px; background: #fff; border: 3px solid #d8c09c; border-radius: 16px; padding: 8px 14px; font-size: 20px; line-height: 1.35; opacity: 0; transform: translateY(8px); transition: all .3s; pointer-events: none; }
 .nbub.on { opacity: 1; transform: none; }
 .nbub b { color: var(--accent2); margin-right: 4px; }
 /* 장면 움직임 */
@@ -216,17 +216,24 @@ svg .firework { animation: fw 1.4s infinite ease-out; }
 .shopinfo .d { flex: 1; }
 
 /* 도감 */
-.codex { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; width: 1100px; }
-.ecard { border: 3px solid #e2d2b8; border-radius: 14px; background: #fff; padding: 4px 8px; height: 84px; display: flex; align-items: center; gap: 8px; cursor: default; position: relative; }
+.codex { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; width: 1100px; }
+.ecard { border: 3px solid #e2d2b8; border-radius: 14px; background: #fff; padding: 4px 8px; height: 70px; display: flex; align-items: center; gap: 8px; cursor: default; position: relative; }
 .ecard .ic { font-size: 30px; }
-.ecard .nm { font-size: 18px; line-height: 1.15; }
+.ecard .nm { font-size: 18px; line-height: 1.15; word-break: keep-all; }
 .ecard.lock { background: #f1ebe2; }
 .ecard.lock .ic { filter: grayscale(1) opacity(.45); }
 .ecard.got { border-color: #f0a0bc; background: #fff6f9; }
 .ecard .pg { position: absolute; left: 10px; right: 10px; bottom: 5px; height: 6px; background: #eadcc6; border-radius: 3px; overflow: hidden; }
 .ecard .pg i { display: block; height: 100%; background: var(--accent2); }
 .ecard:hover { border-color: var(--accent2); }
-.cinfo { margin-top: 12px; font-size: 22px; min-height: 66px; background: #fff; border-radius: 14px; padding: 10px 16px; border: 2px dashed #e2d2b8; }
+.rqs { font-size: 19px; margin-top: 4px; color: var(--ink2); }
+.cpic { float: left; width: 74px; height: 104px; margin: -6px 12px 0 -6px; }
+.cpic svg { width: 100%; height: 100%; }
+#ending .missed { font-size: 19px; color: #ffe2a8; margin-top: 6px; }
+.rq.ok { color: var(--good); }
+.rq.no { color: var(--bad); }
+.rq small { font-size: 15px; color: var(--ink2); }
+.cinfo { margin-top: 10px; font-size: 21px; min-height: 96px; background: #fff; border-radius: 14px; padding: 10px 16px; border: 2px dashed #e2d2b8; }
 
 /* 설정 */
 .setrow { display: flex; align-items: center; gap: 12px; font-size: 25px; margin: 12px 0; }

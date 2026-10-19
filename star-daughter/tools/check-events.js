@@ -5,11 +5,12 @@ const src = ['data.js', 'story.js'].map(f => fs.readFileSync(__dirname + '/../sr
 const c = {}; new Function('c', src + ';c.NPCS=NPCS;c.EVENTS=EVENTS;c.TEACH=TEACH_LINES;c.BOSS=BOSS_LINES;c.ACTS=ACTS;c.PRO=PROLOGUE')(c);
 const { Logic } = ctx;
 const okWho = w => w === 'me' || w === 'dad' || w === 'n' || c.NPCS[w];
-const FX_OK = new Set(['gold', 'stress', 'fame', 'aff', 'hp', 'str', 'int', 'ele', 'cha', 'sen', 'mag', 'mor', 'cook', 'swd', 'haru', 'liana', 'bianca', 'locket', 'orphan', 'cat', 'adv', 'dark', 'trade', 'gamble', 'fortune']);
+const FX_OK = new Set(['gold', 'stress', 'fame', 'aff', 'hp', 'str', 'int', 'ele', 'cha', 'sen', 'mag', 'mor', 'cook', 'swd', 'haru', 'liana', 'bianca', 'locket', 'orphan', 'cat', 'adv', 'dark', 'trade', 'gamble', 'fortune', 'forbidden']);
 let problems = 0;
 const bad = m => { problems++; console.log('✗', m); };
 for (const e of c.EVENTS) {
   for (const l of (e.lines || [])) if (!okWho(l[0])) bad(`${e.id}: unknown speaker ${l[0]}`);
+  if (e.choices.every(ch => ch.need)) bad(`${e.id}: every choice needs gold (can softlock)`);
   e.choices.forEach((ch, i) => {
     for (const k in ch.fx) if (!FX_OK.has(k)) bad(`${e.id}#${i}: unknown fx ${k}`);
     for (const l of (ch.after || [])) if (!okWho(l[0])) bad(`${e.id}#${i}: unknown speaker ${l[0]}`);

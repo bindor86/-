@@ -35,7 +35,8 @@ const Art = (() => {
 
     // 망토
     if (st === 'armor') {
-      p.push(`<path d="M${cx - B.sh * 0.6},${B.neck + 10} Q${cx - B.sh * 1.2},${B.foot - 30} ${cx - B.sh * 0.9},${B.foot - 4} L${cx + B.sh * 0.9},${B.foot - 4} Q${cx + B.sh * 1.2},${B.foot - 30} ${cx + B.sh * 0.6},${B.neck + 10}Z" fill="#b53a4a"/>`);
+      const cape = of.cape || '#b53a4a';
+      p.push(`<path d="M${cx - B.sh * 0.6},${B.neck + 10} Q${cx - B.sh * 1.2},${B.foot - 30} ${cx - B.sh * 0.9},${B.foot - 4} L${cx + B.sh * 0.9},${B.foot - 4} Q${cx + B.sh * 1.2},${B.foot - 30} ${cx + B.sh * 0.6},${B.neck + 10}Z" fill="${cape}" stroke="${shade(cape, -0.25)}" stroke-width="2"/>`);
     }
 
     // 뒷머리
@@ -84,6 +85,7 @@ const Art = (() => {
       }
       p.push(`<path d="M${cx - sw},${top + 6} Q${cx},${top - 4} ${cx + sw},${top + 6} L${cx + fw},${hem} Q${cx},${hem + 8} ${cx - fw},${hem}Z" fill="${fill}" stroke="${colD}" stroke-width="2"/>`);
       if (st === 'robe') {
+        if (of.sparkle) for (let i = 0; i < 10; i++) p.push(`<circle cx="${cx - fw * 0.7 + (i * 41 % (fw * 1.4))}" cy="${B.waist + 18 + (i * 47 % (hem - B.waist - 30))}" r="2.6" fill="${of.sparkle}"/>`);
         p.push(`<path d="M${cx - fw + 3},${hem - 4} Q${cx},${hem + 6} ${cx + fw - 3},${hem - 4}" stroke="${acc}" stroke-width="7" fill="none"/>`);
         p.push(`<line x1="${cx}" y1="${top + 10}" x2="${cx}" y2="${hem}" stroke="${acc}" stroke-width="5"/>`);
         p.push(`<rect x="${cx - ww - 2}" y="${B.waist - 6}" width="${ww * 2 + 4}" height="9" rx="4" fill="${shade(col, -0.35)}"/>`);

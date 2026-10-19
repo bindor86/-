@@ -12,6 +12,11 @@
   meta.settings = Object.assign({}, DEFAULT_META.settings, meta.settings || {});
   meta.titles = meta.titles || {};
   meta.keptAcc = meta.keptAcc || [];
+  // 예전 판에만 있던 엔딩·칭호·옷은 정리
+  for (const k of Object.keys(meta.endings || {})) if (!ENDING[k]) delete meta.endings[k];
+  for (const k of Object.keys(meta.titles)) if (!TITLE[k]) delete meta.titles[k];
+  meta.keptOutfits = (meta.keptOutfits || []).filter(id => OUTFIT[id] && !OUTFIT[id].hidden);
+  meta.keptAcc = meta.keptAcc.filter(id => ACC_ITEM[id]);
   const saveMeta = () => store.set(META_KEY, meta);
 
   let S = null;            // 진행 중인 게임
@@ -198,7 +203,7 @@
     document.querySelectorAll('#styleChips .chip').forEach(s => s.classList.toggle('on', s.dataset.style === setupStyle));
   }
   function startNew() {
-    const name = $('nameInput').value.trim().replace(/\s+/g, ' ').slice(0, 6);
+    const name = $('nameInput').value.replace(/[<>&"'`\\$]/g, '').trim().replace(/\s+/g, ' ').slice(0, 6);
     if (!name) { toast('딸 이름을 지어 줘!'); Sound.play('cancel'); $('nameInput').focus(); return; }
     $('nameInput').blur();
     S = Logic.newGame(name, setupHair, meta, setupStyle);
@@ -243,7 +248,7 @@
     }
     Sound.setSong('home');
     enterMain();
-    await tutorial();
+    if (meta.runs <= 1) await tutorial();
     beginMonth();
   }
 
@@ -279,7 +284,7 @@
       const v = Math.floor(S.st[s.k]);
       const h = hint && hint[s.k];
       const arrow = h ? (h > 0 ? '<span class="arrow up">▲</span>' : '<span class="arrow down">▼</span>') : '<span class="arrow"></span>';
-      return `<div class="srow"><b>${s.n}</b>${arrow}<div class="bar"><i style="width:${Math.min(100, v / 5)}%;background:${s.col}"></i></div><span>${v}</span></div>`;
+      return `<div class="srow"><b>${s.n}</b>${arrow}<div class="bar"><i style="width:${Math.min(100, v / 8)}%;background:${s.col}"></i></div><span>${v}</span></div>`;
     }).join('');
   }
   function gainText(a) {
@@ -295,9 +300,9 @@
       const st = Logic.actState(S, a, planned);
       let money;
       if (a.type === 'job') money = `<span class="money up">+${Logic.payOf(S, a)}G</span>`;
-      else if (a.cost) money = `<span class="money down">-${a.cost}G</span>`;
+      else if (a.cost) money = `<span class="money down">-${Logic.costOf(S, a)}G</span>`;
       else money = `<span class="money">무료</span>`;
-      const lvn = a.type === 'lesson' ? Logic.lessonLv(S, a.id) : 0;
+      const lvn = a.type === 'lesson' || a.type === 'job' ? Logic.lessonLv(S, a.id) : 0;
       const lv = lvn ? `<span class="lv">${'★'.repeat(lvn)}${'☆'.repeat(5 - lvn)}</span>` : '';
       const boost = Logic.gearMult(S, a.id) > 1 ? '<span class="boost">UP</span>' : '';
       const sub = st.ok ? gainText(a) : `🔒 ${st.why}`;
@@ -312,7 +317,7 @@
       el.innerHTML = `<span class="when">${SLOT_NAMES[i]}</span>` + (id ? `<span class="ic">${ACT[id].icon}</span><span class="nm">${ACT[id].name}</span>` : `<span class="ic" style="opacity:.25">＋</span><span class="nm">비어 있음</span>`);
     });
     let out = 0, inc = 0;
-    for (const id of S.sched) if (id) { const a = ACT[id]; if (a.type === 'job') inc += Logic.payOf(S, a); else out += a.cost || 0; }
+    for (const id of S.sched) if (id) { const a = ACT[id]; if (a.type === 'job') inc += Logic.payOf(S, a); else out += Logic.costOf(S, a); }
     $('schedSum').innerHTML = `지출 <b class="down">-${out}G</b> · 수입 <b class="up">+${inc}G</b>`;
     $('startBtn').disabled = firstEmpty !== -1;
     $('repeatBtn').disabled = !canRepeat();
@@ -322,7 +327,7 @@
     let cost = 0;
     for (const id of S.lastSched) {
       if (!Logic.actState(S, ACT[id], cost).ok) return false;
-      cost += ACT[id].cost || 0;
+      cost += Logic.costOf(S, ACT[id]);
     }
     return true;
   }
@@ -424,12 +429,12 @@
     $('rScene').innerHTML = Scenes.activity(a, season(), girlOpts(workExpr), npcSvg);
     renderGirl(workExpr);
     const days = $('rDays').children;
-    await sleep(350);
+    await sleep(300);
     for (let d = 0; d < 10; d++) {
       days[d].classList.add('on');
       Sound.play('tick');
-      if (d === 3) $('rLine').textContent = res.line;
-      await sleep(380);
+      if (d === 2) $('rLine').textContent = res.line;
+      await sleep(300);
     }
     const kindTxt = { great: '대성공!', ok: '성공!', fail: '실패…', sick: '아파서 쉬었어…' }[res.kind];
     const ch = res.changes.slice();
@@ -444,17 +449,21 @@
     renderHud();
     // 선생님·주인 한마디
     let said = false;
-    if (res.lvUp && a.npc && TEACH_LINES[a.npc]) {
+    if (res.lvUp && a.type === 'lesson' && TEACH_LINES[a.npc]) {
       npcSay(a.npc, F(TEACH_LINES[a.npc][res.lvUp - 2]));
       setTimeout(() => Sound.play('lvup'), 400);
-      toast(`${a.name} 수업이 ${res.lvUp}단계가 됐어! 효과가 더 커져`);
+      toast(`${a.name} 수업이 ${res.lvUp}단계가 됐어! 효과가 더 커져 (수업료도 조금 올라)`);
       said = true;
-    } else if (a.type === 'job' && BOSS_LINES[a.npc]) {
-      if (S.cnt[id] === 12) { npcSay(a.npc, F(BOSS_LINES[a.npc].loyal)); said = true; }
-      else if (res.kind === 'great') { npcSay(a.npc, F(pickOne(BOSS_LINES[a.npc].great))); said = true; }
+    } else if (res.lvUp && a.type === 'job' && BOSS_LINES[a.npc]) {
+      npcSay(a.npc, F(res.lvUp >= 3 ? BOSS_LINES[a.npc].loyal : pickOne(BOSS_LINES[a.npc].great)));
+      setTimeout(() => Sound.play('lvup'), 400);
+      toast(`${a.name} 숙련도가 ${res.lvUp}단계가 됐어! 효과와 보수가 커져`);
+      said = true;
+    } else if (a.type === 'job' && BOSS_LINES[a.npc] && res.kind === 'great') {
+      npcSay(a.npc, F(pickOne(BOSS_LINES[a.npc].great))); said = true;
     }
     skip = false;
-    await sleep(said ? 2600 : 1800);
+    await sleep(said ? 2400 : 1500);
   }
 
   async function showSummary(end) {
@@ -464,7 +473,7 @@
     box.classList.add('on');
     Sound.play('coin');
     renderAll();
-    await sleep(1500);
+    await sleep(1200);
     box.classList.remove('on');
   }
 
@@ -494,7 +503,8 @@
     await choose(`<h3><span class="ic">🌟</span>${F('{n}{과} 함께하는 8년')}</h3>
       <p>매달 <b>상순·중순·하순</b> 세 칸에 할 일을 넣어 줘.<br>오른쪽 목록을 <b>클릭</b>하면 빈칸에 차례로 들어가고, 칸을 클릭하면 빠져.</p>
       <p>📚 수업은 돈이 들고 능력치가 올라. 🥐 아르바이트는 돈을 벌어.<br>😫 스트레스가 쌓이면 아프거나 집을 나갈 수도 있으니 🛏️ 휴식·🧳 여행도 챙겨 줘.</p>
-      <p>💕 한 달에 한 번 딸과 시간을 보낼 수 있고, 💬 루퍼스에게 조언을 들을 수 있어.<br>🍂 해마다 10월엔 가을 축제, 🎂 열여덟 살 생일에 엔딩이 정해져. (스페이스바 = 클릭)</p>
+      <p>⭐ 수업과 일은 많이 할수록 단계가 올라서 효과가 커져.<br>💕 한 달에 한 번 딸과 시간을 보낼 수 있고, 💬 루퍼스에게 조언을 들을 수 있어.</p>
+      <p>🍂 해마다 10월엔 가을 축제, 🎂 열여덟 살 생일에 엔딩이 정해져.<br>📖 도감에서 엔딩 조건을 확인할 수 있어. (스페이스바 = 클릭)</p>
       <div class="btns"><button class="btn pri jua" data-v="ok">알겠어!</button></div>`);
     Sound.play('select');
   }
@@ -529,6 +539,7 @@
     const head = { icon: ev.icon, title: ev.title };
     const lines = (ev.lines || []).map(l => [l[0], F(l[1]), l[2]]);
     const choices = ev.choices.map(c => ({ t: F(c.t), off: c.need && S.gold < c.need }));
+    if (choices.every(c => c.off)) choices[choices.length - 1].off = false;
     const i = await playLines(head, lines, choices);
     const r = Logic.chooseEvent(S, ev, i);
     Sound.play('select');
@@ -727,6 +738,24 @@
     renderAll();
   }
 
+  // 엔딩 조건을 사람이 읽는 말로 (지금 딸의 수치와 함께)
+  const CNT_NAME = { art: '미술 수업', music: '음악 수업', church: '성당 일', bakery: '빵집 일', tavern: '주점 일', farm: '농장 일', travel: '여행' };
+  const FLAG_NAME = { liana: '리아나 공주와의 이야기', locket: '은 목걸이의 비밀', orphan: '고아원과의 인연', dark: '주점의 수상한 제안', forbidden: '금지된 마법서', dadtime: '딸과의 시간' };
+  function reqText(req) {
+    const out = [];
+    const mark = (ok, txt) => out.push(`<span class="${S ? (ok ? 'rq ok' : 'rq no') : 'rq'}">${txt}${S ? (ok ? ' ✔' : '') : ''}</span>`);
+    for (const k in req.st || {}) mark(S && S.st[k] >= req.st[k], `${STAT_NAME[k]} ${req.st[k]}${S ? ` <small>(${Math.floor(S.st[k])})</small>` : ''}`);
+    for (const k in req.max || {}) mark(S && S.st[k] <= req.max[k], `${STAT_NAME[k]} ${req.max[k]} 이하${S ? ` <small>(${Math.floor(S.st[k])})</small>` : ''}`);
+    for (const k in req.cnt || {}) mark(S && (S.cnt[k] || 0) >= req.cnt[k], `${CNT_NAME[k] || k} ${req.cnt[k]}번${S ? ` <small>(${S.cnt[k] || 0})</small>` : ''}`);
+    for (const k in req.wins || {}) mark(S && S.wins[k] >= req.wins[k], `${CONTEST[k].name} 우승 ${req.wins[k]}번${S ? ` <small>(${S.wins[k]})</small>` : ''}`);
+    for (const k in req.flags || {}) mark(S && (S.flags[k] || 0) >= req.flags[k], k === 'dadtime' ? `딸과의 시간 ${req.flags[k]}번${S ? ` <small>(${S.flags.dadtime || 0})</small>` : ''}` : FLAG_NAME[k] || k);
+    if (req.gold) mark(S && S.gold >= req.gold, `돈 ${req.gold}G${S ? ` <small>(${Math.floor(S.gold)})</small>` : ''}`);
+    if (req.fame) mark(S && S.fame >= req.fame, `평판 ${req.fame}${S ? ` <small>(${Math.floor(S.fame)})</small>` : ''}`);
+    if (req.aff) mark(S && S.aff >= req.aff, `아빠와의 사이 ${req.aff}${S ? ` <small>(${Math.round(S.aff)})</small>` : ''}`);
+    if (req.runaways) mark(S && S.runaways >= req.runaways, `가출 ${req.runaways}번`);
+    return out.join(' · ');
+  }
+
   // ---------- 도감 ----------
   async function openCodex() {
     if (busy) return;
@@ -734,9 +763,12 @@
     const m = () => $('modal');
     const endInfo = e => {
       const got = meta.endings[e.id];
+      const open = got || !e.hidden;
       const pg = S && !e.hidden && e.id !== 'villager' ? Math.round(Logic.reqProgress(S, e.req) * 100) : null;
-      return `<b class="jua" style="font-size:26px">${e.icon} ${got || !e.hidden ? e.name : '??? (숨겨진 엔딩)'}</b> ${got ? `<span class="up">✔ 달성 ${got.count}번</span>` : '<span style="color:#8a7c99">미달성</span>'}
-        ${pg !== null ? `<span style="float:right;color:#7a6cf0">지금 ${S.name}: ${pg}%</span>` : ''}<br>힌트: ${e.hint}`;
+      const rq = open && e.id !== 'villager' ? `<div class="rqs">조건: ${reqText(e.req)}</div>` : '';
+      const pic = got ? `<div class="cpic">${Art.girl({ stage: 2, outfit: e.outfit, expr: 'happy', hair: hairCol(got.hair || 'brown'), hairStyle: got.style || 'long', acc: e.acc })}</div>` : '';
+      return `${pic}<b class="jua" style="font-size:26px">${e.icon} ${open ? e.name : '??? (숨겨진 엔딩)'}</b> ${got ? `<span class="up">✔ 달성 ${got.count}번${got.name ? ` · ${got.name}` : ''}</span>` : '<span style="color:#8a7c99">미달성</span>'}
+        ${pg !== null ? `<span style="float:right;color:#7a6cf0">지금 ${S.name}: ${pg}%</span>` : ''}<br>힌트: ${e.hint}${rq}`;
     };
     const draw = () => {
       const seen = Object.keys(meta.endings).length;
@@ -806,7 +838,12 @@
   async function startEnding() {
     const e = Logic.decideEnding(S);
     const isNew = !meta.endings[e.id];
-    meta.endings[e.id] = { count: (meta.endings[e.id] ? meta.endings[e.id].count : 0) + 1, name: S.name };
+    meta.endings[e.id] = { count: (meta.endings[e.id] ? meta.endings[e.id].count : 0) + 1, name: S.name, hair: S.hair, style: S.hairStyle };
+    // 다음 판 목표용: 조건은 채웠지만 다른 엔딩이 골라진 길 / 아깝게 놓친 길
+    const others = ENDINGS.filter(x => x !== e && !x.hidden && x.id !== 'villager' && x.tier !== 'D');
+    const alsoMet = others.filter(x => Logic.reqMet(S, x.req)).slice(0, 3);
+    const missed = others.filter(x => !Logic.reqMet(S, x.req) && !meta.endings[x.id])
+      .map(x => ({ x, p: Logic.reqProgress(S, x.req) })).filter(o => o.p >= 0.6).sort((a, b) => b.p - a.p).slice(0, 2);
     const kept = new Set(meta.keptOutfits);
     S.owned.forEach(o => { if (o !== 'basic' && OUTFIT[o] && !OUTFIT[o].hidden) kept.add(o); });
     meta.keptOutfits = Array.from(kept);
@@ -838,6 +875,8 @@
       <h2 class="jua">${e.icon} ${e.name}</h2>
       <p>${F(e.text)}</p>
       <p class="epi" id="eEpi">${F(e.epi)}</p>
+      ${alsoMet.length ? `<div class="missed">이 길도 열려 있었어: ${alsoMet.map(x => `「${x.icon} ${x.name}」`).join(' ')}</div>` : ''}
+      ${missed.length ? `<div class="missed">아깝게 놓친 길: ${missed.map(o => `「${o.x.icon} ${o.x.name}」 ${Math.round(o.p * 100)}%`).join(' ')}</div>` : ''}
       <div class="final">${STATS.map(s => `<div>${s.n} <b>${Math.floor(t[s.k])}</b></div>`).join('')}
         <div>돈 <b>${Math.floor(S.gold)}G</b></div><div>평판 <b>${Math.floor(S.fame)}</b></div><div>우승 <b>${S.wins.martial + S.wins.beauty + S.wins.cook + S.wins.magic}회</b></div><div>칭호 <b>${S.titles.length}개</b></div><div>사이 <b>${hearts(S.aff)}</b></div></div>
       <div class="btns">

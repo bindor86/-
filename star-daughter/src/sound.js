@@ -8,8 +8,8 @@ const Sound = (() => {
     try {
       ctx = new (window.AudioContext || window.webkitAudioContext)();
       const comp = ctx.createDynamicsCompressor();
-      comp.threshold.value = -10; comp.ratio.value = 4;
-      master = ctx.createGain(); master.gain.value = 1.0;
+      comp.threshold.value = -12; comp.ratio.value = 5; comp.knee.value = 6;
+      master = ctx.createGain(); master.gain.value = 1.5;   // 넉넉하게 큰 편
       master.connect(comp); comp.connect(ctx.destination);
       sfxGain = ctx.createGain(); sfxGain.gain.value = sfxVol; sfxGain.connect(master);
       bgmGain = ctx.createGain(); bgmGain.gain.value = bgmVol * 0.55; bgmGain.connect(master);
@@ -41,7 +41,7 @@ const Sound = (() => {
     click:  () => tone(N(84), ctx.currentTime, 0.07, 'square', 0.18),
     select: () => seq([76, 83], 0.06, 'triangle', 0.45),
     cancel: () => seq([72, 65], 0.06, 'triangle', 0.4),
-    tick:   () => tone(N(91), ctx.currentTime, 0.05, 'sine', 0.22),
+    tick:   () => tone(N(84), ctx.currentTime, 0.05, 'triangle', 0.16),
     coin:   () => seq([88, 95], 0.07, 'square', 0.25),
     good:   () => seq([72, 76, 79], 0.07, 'triangle', 0.5),
     great:  () => seq([72, 76, 79, 84, 88], 0.06, 'triangle', 0.55),
@@ -89,6 +89,7 @@ const Sound = (() => {
     bgmTimer = setInterval(() => {
       if (!ctx) return;
       const song = SONGS[bgmSong];
+      if (next < ctx.currentTime - 0.05) next = ctx.currentTime + 0.05;  // 탭이 쉬는 동안 밀린 음은 건너뜀
       while (next < ctx.currentTime + 0.4) {
         const i = bgmStep % song.mel.length;
         if (song.mel[i]) tone(N(song.mel[i] + 12), next, song.tempo * 2.2, 'sine', 0.22, bgmGain);
