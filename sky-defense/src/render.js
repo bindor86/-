@@ -566,6 +566,10 @@ const Render = (() => {
     const alive = W.bld.filter(b => b.alive).length;
     pill(420, 683, 170, 40, 'rgba(10,12,30,0.6)', '건물 ' + alive + '/8', alive <= 2 ? '#ff9a9a' : '#e8f0ff', 24);
     if (W.shieldMax > 0) pill(860, 683, 170, 40, 'rgba(10,30,50,0.65)', '방어막 ' + W.shields, '#9fe8ff', 24);
+    if (!W.boss) {
+      const left = W.queue.length - W.qi + W.enemies.length;
+      pill(1150, 683, 190, 40, 'rgba(10,12,30,0.6)', left ? '남은 적 ' + left : '거의 끝!', '#ffd9a8', 24);
+    }
   }
   function drawReticle(W, x, y) {
     const mega = W.megaArmed && W.megas > 0;

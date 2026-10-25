@@ -340,7 +340,7 @@
       <div class="desc">${c.desc}</div>
       ${ne ? `<div class="newE"><canvas id="neIcon" width="160" height="160"></canvas><div><div class="t1">${run.city === 0 ? '적' : '새 적'}: ${ENEMY[ne].name}</div><div class="t2">${ENEMY[ne].tip}</div></div></div>` : '<div class="newE"><div><div class="t1">마지막 도시</div><div class="t2">지금까지 나온 적이 모두 섞여서 와. 마지막 웨이브엔 거대 모선이 기다려!</div></div></div>'}
       ${how}
-      <div class="bossP">10번째 웨이브: ${c.boss.name}</div>
+      <div class="bossP">10번째 웨이브: ${c.boss.name}<br><span style="color:#ffe9a8">끝까지 건물을 7채 이상 지키면 별 3개, 4채 이상이면 별 2개!</span></div>
       <div class="btnrow"><button class="btn gray small" id="iMap">지도</button><button class="btn" id="iShop">포대 강화</button><button class="btn gold" id="iGo">방어 시작!</button></div>
     </div></div>`);
     if (ne) Render.enemyIcon($('neIcon'), ne);
@@ -431,7 +431,7 @@
     screen(`<div class="full"><div class="mid panel">
       <h2>${J(c.name, '을', '를')} 지켜냈어!</h2>
       <div class="bigstars">${stars}</div>
-      <div class="msg" style="margin-bottom:8px">${r.stars === 3 ? '완벽한 방어야!' : r.stars === 2 ? '건물이 7채 넘게 남으면 별 3개야.' : '건물이 4채 넘게 남으면 별 2개야.'}${r.newBest && !r.firstClear ? ' 별 기록을 새로 세웠어!' : ''}</div>
+      <div class="msg" style="margin-bottom:8px">${r.stars === 3 ? '완벽한 방어야!' : r.stars === 2 ? '건물이 7채 이상 남으면 별 3개야.' : '건물이 4채 이상 남으면 별 2개야.'}${r.newBest && !r.firstClear ? ' 별 기록을 새로 세웠어!' : ''}</div>
       <div class="stats">
         <div>남은 건물 <b>${r.alive}/8</b></div><div>격추 <b>${cr.kills}</b></div>
         <div>최대 연쇄 <b>${cr.chain}</b></div><div>잃은 건물 <b>${cr.lost}</b></div>
